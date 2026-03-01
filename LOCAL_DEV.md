@@ -268,7 +268,7 @@ Each tenant's fleet is fully isolated — logging in as `alice@acme.com` shows o
 
 | Command | What it does |
 |---------|-------------|
-| `npm run test:e2e:backend` | Starts db + api-go + api-java + simulator, then verifies UI-backed APIs receive telemetry events |
+| `npm run test:e2e:backend` | Runs Playwright backend API E2E (`apps/api-e2e`) against db + api-go + api-java + simulator |
 | `npm run lint` | Lint all projects (Nx affected) |
 | `npm run test` | Run all test suites |
 | `npm run build` | Production build for all projects |

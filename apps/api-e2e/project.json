@@ -1,0 +1,15 @@
+{
+  "name": "api-e2e",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "tags": ["scope:test", "type:e2e"],
+  "targets": {
+    "e2e": {
+      "executor": "@nx/playwright:playwright",
+      "options": {
+        "config": "apps/api-e2e/playwright.config.ts",
+        "skipInstall": true
+      }
+    }
+  }
+}
