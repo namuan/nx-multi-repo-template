@@ -31,7 +31,7 @@ public class Geofence {
     @Column(nullable = false)
     private Double centerLng;
 
-    @Column(nullable = false)
+    @Column(name = "radius_m", nullable = false)
     private Double radiusM;
 
     @Column(nullable = false)

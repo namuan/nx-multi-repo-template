@@ -72,7 +72,7 @@ Stops all containers and kills the tmux session (if one is running).
 
 ## Option B — tmux (recommended for active development)
 
-One command opens a single terminal window split into four panes — database, Go API, Java API, and frontend — all starting in the right order automatically. A second window runs the device simulator.
+One command opens two tmux windows: the first streams unified logs, and the second runs all app panes (database, Go API, Java API, frontend, simulator).
 
 **1. Copy environment variables (first time only)**
 
@@ -91,31 +91,24 @@ tmux will:
 1. Verify prerequisites (exits with an error if anything is missing)
 2. Start PostgreSQL in Docker and wait until it is healthy
 3. Signal the other panes, which then each start their service
-4. Open a second window (`simulator`) with the GPS device simulator
+4. Open window 1 (`logs`) with a unified log stream
+5. Open window 2 (`dev`) with app panes including the simulator
 
 **Pane layout**
 
 ```
-┌──────────────────┬──────────────────┐
-│  🗄 PostgreSQL   │  🐹 Go API       │
-│    (+ DB logs)   │    :9101         │
-├──────────────────┼──────────────────┤
-│  ⚛  Frontend    │  ☕ Java API      │
-│    :9100         │    :9102         │
-└──────────────────┴──────────────────┘
-  window 1: dev          (Ctrl-b 1)
+window 1: logs
+  pane: 📜 unified log stream across all services
 
-┌────────────────────────────────────┐
-│  GPS device simulator (8 devices) │
-└────────────────────────────────────┘
-  window 2: simulator    (Ctrl-b 2)
+window 2: dev
+  panes: 🗄 PostgreSQL, 🐹 Go API, ⚛ Frontend, ☕ Java API, 📡 Simulator
 ```
 
 **Useful tmux keys**
 
 | Key | Action |
 |-----|--------|
-| `Ctrl-b 1` / `Ctrl-b 2` | Switch between dev and simulator windows |
+| `Ctrl-b 1` / `Ctrl-b 2` | Switch between logs and dev windows |
 | `Ctrl-b ←↑→↓` | Move between panes |
 | `Ctrl-b z` | Zoom the focused pane to full screen (again to unzoom) |
 | `Ctrl-b d` | Detach (session keeps running in background) |
@@ -269,6 +262,7 @@ Each tenant's fleet is fully isolated — logging in as `alice@acme.com` shows o
 | `npm run dev:logs:go` | Tail Go API logs |
 | `npm run dev:logs:java` | Tail Java API logs |
 | `npm run dev:logs:frontend` | Tail nginx logs |
+| `npm run dev:logs:all` | Single stream of all app logs (tmux aggregate, or docker fallback) |
 
 ### Quality
 
@@ -345,6 +339,20 @@ Run the simulator to push live telemetry:
 ```sh
 npm run dev:simulate
 ```
+
+In tmux mode, the simulator is already started in window 2 (`dev`). Switch with:
+
+```sh
+Ctrl-b 1
+```
+
+If it crashed, restart it from that pane with:
+
+```sh
+npm run dev:simulate
+```
+
+Local simulator runs now include startup fast-forward by default (`FAST_FORWARD_EVENTS=40`, `FAST_FORWARD_STEP_MS=15000` when targeting localhost). Reduce or disable via `.env` if needed.
 
 Or start the full stack with the demo profile:
 

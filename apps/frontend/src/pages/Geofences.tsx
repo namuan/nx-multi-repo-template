@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { MapContainer, TileLayer, Circle, Popup, useMapEvents } from 'react-leaflet';
 import { Plus, Trash2 } from 'lucide-react';
 import 'leaflet/dist/leaflet.css';
+import type { Map as LeafletMap } from 'leaflet';
 import { Layout } from '../components/Layout';
 import { geofences as geofenceApi, type Geofence } from '../lib/api';
 
@@ -69,6 +70,16 @@ function CreateGeofenceModal({ onClose }: { onClose: () => void }) {
 export default function Geofences() {
   const qc = useQueryClient();
   const [showCreate, setShowCreate] = useState(false);
+  const mapRef = useRef<LeafletMap | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (mapRef.current) {
+        mapRef.current.remove();
+        mapRef.current = null;
+      }
+    };
+  }, []);
 
   const { data: geofenceList = [] } = useQuery({
     queryKey: ['geofences'],
@@ -96,7 +107,7 @@ export default function Geofences() {
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: 16 }}>
         <div className="map-panel" style={{ height: 520 }}>
-          <MapContainer center={[centerLat, centerLng]} zoom={12} style={{ height: '100%' }}>
+          <MapContainer ref={mapRef} center={[centerLat, centerLng]} zoom={12} style={{ height: '100%' }}>
             <TileLayer
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               attribution='&copy; OpenStreetMap contributors'

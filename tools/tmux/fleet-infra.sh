@@ -23,6 +23,8 @@ echo ""
 echo "  Frontend  →  http://localhost:9100"
 echo "  Go API    →  http://localhost:9101"
 echo "  Java API  →  http://localhost:9102"
+echo "  Simulator →  tmux window 2 (dev)"
+echo "  Logs      →  tmux window 1 (logs)"
 echo ""
 
 # Keep the pane alive and useful by tailing DB logs

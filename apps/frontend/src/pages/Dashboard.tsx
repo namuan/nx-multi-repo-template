@@ -1,66 +1,16 @@
 import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { MapContainer, TileLayer, Circle, Popup } from 'react-leaflet';
-import { Truck, Wifi, WifiOff, AlertTriangle, MapPin } from 'lucide-react';
-import 'leaflet/dist/leaflet.css';
+import { Truck, Wifi, WifiOff, AlertTriangle } from 'lucide-react';
 import { Layout } from '../components/Layout';
-import { devices as deviceApi, alerts, geofences } from '../lib/api';
-import type { Device, Geofence } from '../lib/api';
+import { devices as deviceApi, alerts } from '../lib/api';
 import { fleetWs, type TelemetryMessage } from '../lib/ws';
 import { formatDistanceToNow } from 'date-fns';
 
-const DEVICE_EMOJI: Record<string, string> = {
-  truck: '🚛', van: '🚐', motorcycle: '🏍', car: '🚗', drone: '🚁',
-};
-
-function DeviceMarker({ device }: { device: Device }) {
-  const { DivIcon, Marker } = require('leaflet');
-  const L = require('leaflet');
-
-  if (!device.lastLat || !device.lastLng) return null;
-
-  const color = device.status === 'online' ? '#10B981'
-    : device.status === 'maintenance' ? '#F59E0B' : '#64748B';
-
-  const icon = L.divIcon({
-    className: '',
-    html: `<div style="
-      background:${color};border-radius:50%;width:30px;height:30px;
-      display:flex;align-items:center;justify-content:center;
-      border:2px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,0.5);
-      font-size:14px;cursor:pointer;
-    ">${DEVICE_EMOJI[device.type] ?? '📍'}</div>`,
-    iconSize: [30, 30],
-    iconAnchor: [15, 15],
-  });
-
-  return (
-    <Marker position={[device.lastLat, device.lastLng]} icon={icon}>
-      <Popup>
-        <div style={{ minWidth: 180, background: '#1E293B', color: '#F1F5F9', padding: 8, borderRadius: 6 }}>
-          <strong>{device.name}</strong>
-          <div style={{ fontSize: 12, marginTop: 4 }}>
-            {device.driverName && <div>Driver: {device.driverName}</div>}
-            {device.licensePlate && <div>Plate: {device.licensePlate}</div>}
-            <div>Speed: {device.lastSpeed?.toFixed(1) ?? 0} km/h</div>
-            <div>Status: <span style={{ color }}>{device.status}</span></div>
-          </div>
-        </div>
-      </Popup>
-    </Marker>
-  );
-}
-
 export default function Dashboard() {
-  const { data: deviceList = [], refetch: refetchDevices } = useQuery({
+  const { data: deviceList = [] } = useQuery({
     queryKey: ['devices'],
     queryFn: () => deviceApi.list().then(r => r.data),
     refetchInterval: 60_000,
-  });
-
-  const { data: geofenceList = [] } = useQuery({
-    queryKey: ['geofences'],
-    queryFn: () => geofences.list().then(r => r.data),
   });
 
   const { data: unackedAlerts = [] } = useQuery({
@@ -92,9 +42,6 @@ export default function Dashboard() {
 
   const online  = mergedDevices.filter(d => d.status === 'online').length;
   const offline = mergedDevices.filter(d => d.status === 'offline').length;
-  const center  = mergedDevices.find(d => d.lastLat)
-    ? [mergedDevices.find(d => d.lastLat)!.lastLat!, mergedDevices.find(d => d.lastLat)!.lastLng!] as [number, number]
-    : [37.7749, -122.4194] as [number, number];
 
   return (
     <Layout title="Dashboard">
@@ -137,28 +84,7 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="dashboard-grid">
-        <div className="map-panel">
-          <MapContainer center={center} zoom={12} style={{ height: '100%', width: '100%' }}>
-            <TileLayer
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              attribution='&copy; OpenStreetMap contributors'
-            />
-            {geofenceList.map(gf => (
-              <Circle
-                key={gf.id}
-                center={[gf.centerLat, gf.centerLng]}
-                radius={gf.radiusM}
-                pathOptions={{ color: gf.color, fillColor: gf.color, fillOpacity: 0.1 }}
-              >
-                <Popup>{gf.name} ({gf.radiusM}m radius)</Popup>
-              </Circle>
-            ))}
-            {mergedDevices.map(d => <DeviceMarker key={d.id} device={d} />)}
-          </MapContainer>
-        </div>
-
-        {/* Live alerts sidebar */}
+      <div style={{ marginTop: 16 }}>
         <div className="card" style={{ overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
           <div style={{ fontWeight: 600, marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
             <AlertTriangle size={16} color="var(--danger)" />
