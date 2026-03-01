@@ -2,7 +2,7 @@
 
 **Nx + React (Vite + TS) + Go + Java (Spring Boot + Maven)**
 
-A production-ready polyglot monorepo blueprint with Dockerfiles, Helm charts, CI pipeline, and docker-compose.
+A production-ready polyglot monorepo with shared Postgres, migration-first database bootstrap, Docker/Helm deployment paths, and Nx orchestration across stacks.
 
 `apps/api-java` requires JDK 21.
 
@@ -18,100 +18,55 @@ A production-ready polyglot monorepo blueprint with Dockerfiles, Helm charts, CI
 ## Quick Start
 
 ```bash
-# Install dependencies
-pnpm install
+# Validate prerequisites + install dependencies
+npm run setup
 
-# Build all apps
-./node_modules/.bin/nx run-many -t build
-
-# Serve all dev servers
-./node_modules/.bin/nx run-many -t serve
-
-# Run all tests
-./node_modules/.bin/nx run-many -t test
-
-# Lint all projects
-./node_modules/.bin/nx run-many -t lint
-```
-
-## Docker
-
-```bash
-# Start full stack locally
-docker compose up
-
-# Build a specific image
-docker build -f apps/api-go/Dockerfile -t api-go .
-```
-
-## Environment Variables
-
-Use `.env.example` as the baseline for local development.
-
-| Variable | Service | Default | Purpose |
-|---|---|---|---|
-| `PORT` | `api-go` | `8080` | Go API listen port |
-| `ALLOWED_ORIGIN` | `api-go` | `https://frontend.example.com` | CORS allowed origin |
-| `SERVER_PORT` | `api-java` | `8080` | Java API listen port |
-| `VITE_API_GO_URL` | `frontend` | `http://localhost:9101` | Frontend URL for Go API |
-| `VITE_API_JAVA_URL` | `frontend` | `http://localhost:9102` | Frontend URL for Java API |
-
-Copy and adapt as needed:
-
-```bash
+# Copy env file
 cp .env.example .env
+
+# Start full local stack (db + APIs + frontend)
+npm run dev:up
+
+# Run backend and frontend E2E suites
+npm run test:e2e:backend
+npm run test:e2e:frontend
 ```
 
-## Kubernetes (Helm)
+For full local workflows (Docker, tmux, local processes, troubleshooting), see `LOCAL_DEV.md`.
+
+## Common Commands
 
 ```bash
-# Deploy api-go
-helm upgrade --install api-go charts/api-go
+# Build, lint, test all projects
+npm run build
+npm run lint
+npm run test
 
-# Deploy all services
-helm upgrade --install frontend charts/frontend
-helm upgrade --install api-go charts/api-go
-helm upgrade --install api-java charts/api-java
+# Migration-first database commands
+npm run db:migrate
+npm run db:seed
 
-# Deploy with environment-specific values
-helm upgrade --install api-go charts/api-go -f charts/api-go/values-staging.yaml
-helm upgrade --install api-go charts/api-go -f charts/api-go/values-production.yaml
-```
-
-## API Specs
-
-- Go API OpenAPI spec: `docs/openapi/api-go.yaml`
-- Java API OpenAPI spec: `docs/openapi/api-java.yaml`
-- Database migration guide: `docs/db-migrations.md`
-
-## Nx Affected (CI)
-
-```bash
-# Only build/test/lint changed projects
+# Change-based CI-style execution
 ./node_modules/.bin/nx affected -t lint test build --base=origin/main
 ```
 
-## Project Structure
+## Documentation Map
 
-```
-nx-polyglot-monorepo/
-├── apps/
-│   ├── frontend/          # React + Vite + TS
-│   ├── api-go/            # Go HTTP API
-│   └── api-java/          # Spring Boot + Java
-├── libs/
-│   └── ui-shared/         # Shared React components
-├── charts/
-│   ├── frontend/          # Helm chart
-│   ├── api-go/            # Helm chart
-│   └── api-java/          # Helm chart
-├── .github/workflows/
-│   └── ci.yml
-├── docker-compose.yml
-├── nx.json
-├── package.json
-├── pnpm-workspace.yaml
-├── tsconfig.base.json
-├── go.work
-└── README.md
-```
+- Local development: `LOCAL_DEV.md`
+- Contribution workflow: `CONTRIBUTING.md`
+- Operational runbook (deploy/rollback/debug): `docs/runbook.md`
+- System architecture: `docs/polyglot-architecture.md`
+- Backend E2E architecture: `docs/e2e-architecture.md`
+- Database migration conventions: `docs/db-migrations.md`
+- ADRs: `docs/adr/`
+- OpenAPI specs:
+  - `docs/openapi/api-go.yaml`
+  - `docs/openapi/api-java.yaml`
+
+## Repository Layout
+
+- `apps/` deployable services and test applications
+- `libs/` shared libraries
+- `charts/` per-service Helm charts
+- `docs/` architecture, operations, and API documentation
+- `tools/` simulator and developer automation scripts

@@ -2,6 +2,8 @@
 
 Everything runs through `npm run <command>`. You never need to call `docker`, `pnpm`, `go`, or `mvn` directly.
 
+For cluster deploy/rollback/debug operations, see `docs/runbook.md`.
+
 ---
 
 ## Prerequisites
