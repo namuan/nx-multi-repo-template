@@ -62,10 +62,13 @@ CREATE INDEX idx_devices_tenant_id ON devices(tenant_id);
 CREATE INDEX idx_devices_api_key ON devices(api_key);
 
 -- ─── Telemetry Events ───────────────────────────────────────────────────────
+-- Partitioned by recorded_at for efficient retention pruning.
+-- PostgreSQL requires the partition key to be part of every unique constraint,
+-- so the primary key is (id, recorded_at) rather than id alone.
 CREATE TABLE telemetry_events (
-  id          UUID         PRIMARY KEY DEFAULT gen_random_uuid(),
-  tenant_id   UUID         NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
-  device_id   UUID         NOT NULL REFERENCES devices(id) ON DELETE CASCADE,
+  id          UUID             NOT NULL DEFAULT gen_random_uuid(),
+  tenant_id   UUID             NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
+  device_id   UUID             NOT NULL REFERENCES devices(id) ON DELETE CASCADE,
   lat         DOUBLE PRECISION NOT NULL,
   lng         DOUBLE PRECISION NOT NULL,
   speed       DOUBLE PRECISION NOT NULL DEFAULT 0,
@@ -75,7 +78,8 @@ CREATE TABLE telemetry_events (
   engine_temp DOUBLE PRECISION,
   odometer    DOUBLE PRECISION,
   metadata    JSONB NOT NULL DEFAULT '{}',
-  recorded_at TIMESTAMPTZ NOT NULL DEFAULT now()
+  recorded_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  PRIMARY KEY (id, recorded_at)
 ) PARTITION BY RANGE (recorded_at);
 
 -- Partition by month for efficient retention pruning

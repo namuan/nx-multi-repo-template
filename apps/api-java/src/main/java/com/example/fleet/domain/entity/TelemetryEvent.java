@@ -12,13 +12,18 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "telemetry_events")
+@IdClass(TelemetryEventId.class)
 @Data
 @NoArgsConstructor
 public class TelemetryEvent {
 
+    // Composite PK: (id, recorded_at) — required by the partitioned table
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+
+    @Id
+    @Column(nullable = false)
+    private Instant recordedAt;
 
     @Column(nullable = false)
     private UUID tenantId;
@@ -48,7 +53,4 @@ public class TelemetryEvent {
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb")
     private Map<String, Object> metadata;
-
-    @Column(nullable = false)
-    private Instant recordedAt;
 }
