@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { getDevices, newJavaApiContext, registerTenantAndGetToken } from './support/api-client';
+import { getDevices, newGoApiContext, newJavaApiContext, registerTenantAndGetToken } from './support/api-client';
 
 type Device = {
   id: string;
@@ -14,6 +14,7 @@ type Device = {
 type Alert = {
   id: string;
   deviceId: string;
+  ruleId?: string;
   type: string;
   message: string;
   severity: 'info' | 'warning' | 'critical';
@@ -33,6 +34,38 @@ async function createDevice(api: Awaited<ReturnType<typeof newJavaApiContext>>, 
   });
   expect(response.ok()).toBeTruthy();
   return response.json();
+}
+
+async function createSpeedRule(api: Awaited<ReturnType<typeof newJavaApiContext>>, token: string, threshold: number) {
+  const response = await api.post('/api/alert-rules', {
+    headers: { Authorization: `Bearer ${token}` },
+    data: {
+      name: `Speed limit ${threshold} km/h`,
+      type: 'speed',
+      threshold,
+      severity: 'critical',
+    },
+  });
+
+  expect(response.status()).toBe(201);
+  return response.json();
+}
+
+async function sendTelemetry(api: Awaited<ReturnType<typeof newGoApiContext>>, deviceApiKey: string, speed: number) {
+  const response = await api.post('/api/devices/telemetry', {
+    headers: { 'X-Device-Key': deviceApiKey },
+    data: {
+      lat: 37.7749,
+      lng: -122.4194,
+      speed,
+      heading: 90,
+      altitude: 12,
+      recorded_at: new Date().toISOString(),
+      metadata: { source: 'api-e2e' },
+    },
+  });
+
+  expect(response.status()).toBe(202);
 }
 
 test.describe('dashboard-backed Java APIs', () => {
@@ -130,6 +163,85 @@ test.describe('dashboard-backed Java APIs', () => {
       expect(countBody.count).toBe(alerts.length);
     } finally {
       await api.dispose();
+    }
+  });
+
+  test('generates and acknowledges alerts from speed rule + telemetry', async () => {
+    const javaApi = await newJavaApiContext();
+    const goApi = await newGoApiContext();
+
+    try {
+      const { token } = await registerTenantAndGetToken(javaApi);
+      const device = (await createDevice(javaApi, token, 'E2E Alert Device', 'truck')) as Device;
+
+      const threshold = 80;
+      const observedSpeed = 95;
+      const rule = (await createSpeedRule(javaApi, token, threshold)) as { id: string };
+
+      await sendTelemetry(goApi, device.apiKey, observedSpeed);
+
+      await expect
+        .poll(
+          async () => {
+            const alertsResponse = await javaApi.get('/api/alerts/unacknowledged', {
+              headers: { Authorization: `Bearer ${token}` },
+            });
+            if (!alertsResponse.ok()) {
+              return 0;
+            }
+
+            const alerts = (await alertsResponse.json()) as Alert[];
+            return alerts.length;
+          },
+          { timeout: 20_000, intervals: [500, 1_000, 1_000, 2_000] }
+        )
+        .toBe(1);
+
+      const alertsResponse = await javaApi.get('/api/alerts/unacknowledged', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      expect(alertsResponse.ok()).toBeTruthy();
+      const alerts = (await alertsResponse.json()) as Alert[];
+
+      expect(alerts.length).toBe(1);
+      expect(alerts[0]?.ruleId).toBe(rule.id);
+      expect(alerts[0]?.deviceId).toBe(device.id);
+      expect(alerts[0]?.type).toBe('speed');
+      expect(alerts[0]?.severity).toBe('critical');
+
+      const expectedMessage = `${device.name} exceeded ${threshold} km/h (recorded: ${observedSpeed} km/h)`;
+      expect(alerts[0]?.message).toBe(expectedMessage);
+
+      const countResponse = await javaApi.get('/api/alerts/count', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      expect(countResponse.ok()).toBeTruthy();
+      const countBody = (await countResponse.json()) as { count: number };
+      expect(countBody.count).toBe(1);
+
+      const acknowledgeResponse = await javaApi.post(`/api/alerts/${alerts[0]?.id}/acknowledge`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      expect(acknowledgeResponse.ok()).toBeTruthy();
+
+      await expect
+        .poll(
+          async () => {
+            const response = await javaApi.get('/api/alerts/count', {
+              headers: { Authorization: `Bearer ${token}` },
+            });
+            if (!response.ok()) {
+              return -1;
+            }
+            const body = (await response.json()) as { count: number };
+            return body.count;
+          },
+          { timeout: 10_000, intervals: [300, 500, 1_000] }
+        )
+        .toBe(0);
+    } finally {
+      await goApi.dispose();
+      await javaApi.dispose();
     }
   });
 });

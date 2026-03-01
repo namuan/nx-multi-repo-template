@@ -1,5 +1,5 @@
 import { APIRequestContext, request } from '@playwright/test';
-import { JAVA_API_URL } from './env';
+import { GO_API_URL, JAVA_API_URL } from './env';
 
 interface RegisterResponse {
   token: string;
@@ -20,6 +20,15 @@ export interface Device {
 export async function newJavaApiContext(): Promise<APIRequestContext> {
   return request.newContext({
     baseURL: JAVA_API_URL,
+    extraHTTPHeaders: {
+      'Content-Type': 'application/json',
+    },
+  });
+}
+
+export async function newGoApiContext(): Promise<APIRequestContext> {
+  return request.newContext({
+    baseURL: GO_API_URL,
     extraHTTPHeaders: {
       'Content-Type': 'application/json',
     },
