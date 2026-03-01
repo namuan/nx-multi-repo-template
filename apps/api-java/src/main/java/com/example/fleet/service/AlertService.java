@@ -72,7 +72,6 @@ public class AlertService {
         rule.setName(req.name());
         rule.setType(req.type());
         rule.setThreshold(req.threshold());
-        rule.setGeofenceId(req.geofenceId());
         rule.setSeverity(req.severity() != null ? req.severity() : "warning");
         rule = ruleRepo.save(rule);
 

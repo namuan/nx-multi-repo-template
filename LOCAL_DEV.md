@@ -210,7 +210,7 @@ All passwords are case-sensitive.
 | Fleet admin (SwiftFleet) | `diana@swiftfleet.io` | `Demo123!` | SwiftFleet fleet |
 | Fleet admin (Urban) | `frank@urbandel.co` | `Demo123!` | Urban Delivery Co fleet |
 
-Each tenant's fleet is fully isolated — logging in as `alice@acme.com` shows only Acme's devices, alerts, and geofences.
+Each tenant's fleet is fully isolated — logging in as `alice@acme.com` shows only Acme's devices and alerts.
 
 ---
 

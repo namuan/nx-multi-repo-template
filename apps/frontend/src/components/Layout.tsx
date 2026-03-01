@@ -1,6 +1,6 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import {
-  LayoutDashboard, Truck, Bell, MapPin, Settings,
+  LayoutDashboard, Truck, Bell, Settings,
   LogOut, Shield, ChevronRight, Activity
 } from 'lucide-react';
 import { useAuthStore } from '../stores/auth.store';
@@ -48,9 +48,6 @@ export function Layout({ children, title }: LayoutProps) {
             {alertCount && alertCount > 0
               ? <span className="badge-count">{alertCount}</span>
               : null}
-          </NavLink>
-          <NavLink to="/geofences" className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}>
-            <MapPin size={16} /> Geofences
           </NavLink>
 
           <div className="nav-section" style={{ marginTop: 8 }}>Account</div>

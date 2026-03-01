@@ -93,19 +93,7 @@ export interface AlertRule {
   name: string;
   type: string;
   threshold?: number;
-  geofenceId?: string;
   severity: string;
-  active: boolean;
-  createdAt: string;
-}
-
-export interface Geofence {
-  id: string;
-  name: string;
-  centerLat: number;
-  centerLng: number;
-  radiusM: number;
-  color: string;
   active: boolean;
   createdAt: string;
 }
@@ -164,14 +152,6 @@ export const alerts = {
   toggleRule: (id: string, active: boolean) =>
     javaApi.patch<AlertRule>(`/api/alert-rules/${id}/toggle?active=${active}`),
   deleteRule: (id: string) => javaApi.delete(`/api/alert-rules/${id}`),
-};
-
-// ── Geofences ─────────────────────────────────────────────────────────────────
-export const geofences = {
-  list: () => javaApi.get<Geofence[]>('/api/geofences'),
-  create: (data: object) => javaApi.post<Geofence>('/api/geofences', data),
-  update: (id: string, data: object) => javaApi.put<Geofence>(`/api/geofences/${id}`, data),
-  delete: (id: string) => javaApi.delete(`/api/geofences/${id}`),
 };
 
 // ── Tenant ────────────────────────────────────────────────────────────────────

@@ -29,8 +29,6 @@ public class AlertRule {
 
     private Double threshold;
 
-    private UUID geofenceId;
-
     @Column(nullable = false)
     private String severity = "warning";
 

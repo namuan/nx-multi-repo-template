@@ -102,30 +102,14 @@ CREATE TABLE telemetry_events_default  PARTITION OF telemetry_events DEFAULT;
 CREATE INDEX idx_telemetry_device_time  ON telemetry_events(device_id, recorded_at DESC);
 CREATE INDEX idx_telemetry_tenant_time  ON telemetry_events(tenant_id, recorded_at DESC);
 
--- ─── Geofences ──────────────────────────────────────────────────────────────
-CREATE TABLE geofences (
-  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  tenant_id   UUID NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
-  name        VARCHAR(255) NOT NULL,
-  center_lat  DOUBLE PRECISION NOT NULL,
-  center_lng  DOUBLE PRECISION NOT NULL,
-  radius_m    DOUBLE PRECISION NOT NULL,
-  color       VARCHAR(7) NOT NULL DEFAULT '#EF4444',
-  active      BOOLEAN NOT NULL DEFAULT true,
-  created_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
-  updated_at  TIMESTAMPTZ NOT NULL DEFAULT now()
-);
-CREATE INDEX idx_geofences_tenant_id ON geofences(tenant_id);
-
 -- ─── Alert Rules ────────────────────────────────────────────────────────────
 CREATE TABLE alert_rules (
   id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   tenant_id   UUID NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
   name        VARCHAR(255) NOT NULL,
   type        VARCHAR(20) NOT NULL
-                CHECK (type IN ('speed','geofence_enter','geofence_exit','idle','offline','fuel_low')),
+                CHECK (type IN ('speed','idle','offline','fuel_low')),
   threshold   DOUBLE PRECISION,
-  geofence_id UUID REFERENCES geofences(id) ON DELETE SET NULL,
   severity    VARCHAR(20) NOT NULL DEFAULT 'warning'
                 CHECK (severity IN ('info','warning','critical')),
   active      BOOLEAN NOT NULL DEFAULT true,
@@ -166,7 +150,7 @@ CREATE TABLE audit_logs (
 CREATE INDEX idx_audit_tenant_time ON audit_logs(tenant_id, created_at DESC);
 
 -- ═══════════════════════════════════════════════════════════════════════════
--- SEED DATA — Demo tenants, users, devices, geofences, alert rules, alerts
+-- SEED DATA — Demo tenants, users, devices, alert rules, alerts
 -- ═══════════════════════════════════════════════════════════════════════════
 
 -- Platform admin tenant (special)
@@ -218,16 +202,6 @@ VALUES
    'Drone Echo-5', 'drone', 'acme-device-key-echo-005-secretxx', 'maintenance',
    37.7900, -122.3900, 0, 0, now() - interval '1 day', NULL, 'CA-ACM-005');
 
--- Acme geofences
-INSERT INTO geofences (id, tenant_id, name, center_lat, center_lng, radius_m, color)
-VALUES
-  ('10000000-0000-0000-0002-000000000001', '10000000-0000-0000-0000-000000000001',
-   'HQ Depot', 37.7749, -122.4194, 500, '#3B82F6'),
-  ('10000000-0000-0000-0002-000000000002', '10000000-0000-0000-0000-000000000001',
-   'Port of Oakland', 37.7955, -122.2783, 800, '#10B981'),
-  ('10000000-0000-0000-0002-000000000003', '10000000-0000-0000-0000-000000000001',
-   'Restricted Zone A', 37.7300, -122.4700, 300, '#EF4444');
-
 -- Acme alert rules
 INSERT INTO alert_rules (id, tenant_id, name, type, threshold, severity)
 VALUES
@@ -239,11 +213,6 @@ VALUES
    'Idle > 15 min', 'idle', 15, 'info'),
   ('10000000-0000-0000-0003-000000000004', '10000000-0000-0000-0000-000000000001',
    'Fuel Below 15%', 'fuel_low', 15, 'warning');
-
-INSERT INTO alert_rules (id, tenant_id, name, type, geofence_id, severity)
-VALUES
-  ('10000000-0000-0000-0003-000000000005', '10000000-0000-0000-0000-000000000001',
-   'Entered Restricted Zone A', 'geofence_enter', '10000000-0000-0000-0002-000000000003', 'critical');
 
 -- Acme sample alerts
 INSERT INTO alerts (tenant_id, device_id, rule_id, type, message, severity, created_at)
@@ -285,14 +254,6 @@ VALUES
    'Unit SW-104', 'car', 'swift-device-key-sw104-secret-xxx', 'offline',
    41.8600, -87.6500, 0, 0, now() - interval '4 hours', 'Paul Kim', 'IL-SWF-104');
 
--- SwiftFleet geofences
-INSERT INTO geofences (id, tenant_id, name, center_lat, center_lng, radius_m, color)
-VALUES
-  ('20000000-0000-0000-0002-000000000001', '20000000-0000-0000-0000-000000000001',
-   'Chicago Depot', 41.8781, -87.6298, 400, '#10B981'),
-  ('20000000-0000-0000-0002-000000000002', '20000000-0000-0000-0000-000000000001',
-   'O''Hare Distribution', 41.9742, -87.9073, 600, '#F59E0B');
-
 -- SwiftFleet alert rules
 INSERT INTO alert_rules (id, tenant_id, name, type, threshold, severity)
 VALUES
@@ -330,12 +291,6 @@ VALUES
   ('30000000-0000-0000-0001-000000000003', '30000000-0000-0000-0000-000000000001',
    'Car NYC-3', 'car', 'urban-device-key-nyc003-secret-x', 'offline',
    40.7050, -74.0150, 0, 0, now() - interval '6 hours', 'Iris Scott', 'NY-URB-003');
-
--- Urban geofences
-INSERT INTO geofences (id, tenant_id, name, center_lat, center_lng, radius_m, color)
-VALUES
-  ('30000000-0000-0000-0002-000000000001', '30000000-0000-0000-0000-000000000001',
-   'Manhattan HQ', 40.7128, -74.0060, 350, '#F59E0B');
 
 -- Urban alert rules
 INSERT INTO alert_rules (id, tenant_id, name, type, threshold, severity)

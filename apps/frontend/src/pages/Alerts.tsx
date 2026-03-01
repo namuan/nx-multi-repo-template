@@ -38,7 +38,7 @@ function CreateRuleModal({ onClose }: { onClose: () => void }) {
           <div className="form-group">
             <label className="form-label">Type</label>
             <select value={form.type} onChange={set('type')}>
-              {['speed', 'idle', 'offline', 'fuel_low', 'geofence_enter', 'geofence_exit'].map(t => (
+              {['speed', 'idle', 'offline', 'fuel_low'].map(t => (
                 <option key={t} value={t}>{t.replace('_', ' ')}</option>
               ))}
             </select>
