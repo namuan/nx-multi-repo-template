@@ -1,0 +1,51 @@
+{
+  "name": "api-go",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "tags": ["scope:backend", "lang:go"],
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/dist/apps/api-go"],
+      "options": {
+        "command": "go build -o ../../dist/apps/api-go/api-go .",
+        "cwd": "apps/api-go"
+      }
+    },
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "go run .",
+        "cwd": "apps/api-go"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "go test ./...",
+        "cwd": "apps/api-go"
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "go vet ./...",
+        "cwd": "apps/api-go"
+      }
+    },
+    "docker:build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker build -f apps/api-go/Dockerfile -t api-go:latest .",
+        "cwd": "{workspaceRoot}"
+      }
+    },
+    "helm:package": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "helm package charts/api-go",
+        "cwd": "{workspaceRoot}"
+      }
+    }
+  }
+}

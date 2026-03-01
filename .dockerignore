@@ -1,0 +1,12 @@
+node_modules/
+.nx/
+tmp/
+dist/
+.git/
+.github/
+charts/
+*.md
+.gitignore
+.dockerignore
+apps/api-java/build/
+apps/api-java/.gradle/

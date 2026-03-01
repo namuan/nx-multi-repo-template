@@ -1,0 +1,51 @@
+{
+  "name": "api-java",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "tags": ["scope:backend", "lang:java"],
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/apps/api-java/build"],
+      "options": {
+        "command": "./gradlew :build -x test --no-daemon",
+        "cwd": "apps/api-java"
+      }
+    },
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "./gradlew :bootRun --no-daemon",
+        "cwd": "apps/api-java"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "./gradlew :test --no-daemon",
+        "cwd": "apps/api-java"
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "./gradlew :ktlintCheck --no-daemon",
+        "cwd": "apps/api-java"
+      }
+    },
+    "docker:build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker build -f apps/api-java/Dockerfile -t api-java:latest .",
+        "cwd": "{workspaceRoot}"
+      }
+    },
+    "helm:package": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "helm package charts/api-java",
+        "cwd": "{workspaceRoot}"
+      }
+    }
+  }
+}

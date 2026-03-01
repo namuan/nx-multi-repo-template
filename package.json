@@ -1,0 +1,25 @@
+{
+  "name": "nx-polyglot-monorepo",
+  "private": true,
+  "scripts": {
+    "nx": "nx"
+  },
+  "devDependencies": {
+    "@nx-tools/nx-container": "latest",
+    "@nx/eslint": "latest",
+    "@nx/js": "latest",
+    "@nx/react": "latest",
+    "@nx/vite": "latest",
+    "@types/node": "25.3.3",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "latest",
+    "eslint": "^9.0.0",
+    "nx": "latest",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "typescript": "~5.7.0",
+    "vite": "latest",
+    "vitest": "latest"
+  }
+}
