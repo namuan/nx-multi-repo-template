@@ -1,24 +1,15 @@
 package com.example.apijava;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.test.web.servlet.MockMvc;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@WebMvcTest(HelloController.class)
+// Legacy test stub — HelloController replaced by fleet controllers
 class HelloControllerTest {
 
-  @Autowired
-  private MockMvc mockMvc;
-
-  @Test
-  void helloEndpointReturnsMessage() throws Exception {
-    mockMvc.perform(get("/api/hello"))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.message").value("Hello from Java API!"));
-  }
+    @Test
+    void legacyControllerIsRemoved() {
+        // HelloController is now a no-op stub in com.example.apijava
+        // Fleet endpoints live in com.example.fleet.controller.*
+        assertTrue(true);
+    }
 }

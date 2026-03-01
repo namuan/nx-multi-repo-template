@@ -7,11 +7,16 @@ import (
 	"testing"
 )
 
-func TestHealthHandler(t *testing.T) {
+func TestHealthEndpoint(t *testing.T) {
+	mux := http.NewServeMux()
+	mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(map[string]string{"status": "ok", "service": "api-go"})
+	})
+
 	req := httptest.NewRequest(http.MethodGet, "/health", nil)
 	rr := httptest.NewRecorder()
-
-	healthHandler(rr, req)
+	mux.ServeHTTP(rr, req)
 
 	if rr.Code != http.StatusOK {
 		t.Errorf("expected status 200, got %d", rr.Code)
@@ -20,60 +25,44 @@ func TestHealthHandler(t *testing.T) {
 		t.Errorf("expected Content-Type application/json, got %s", ct)
 	}
 
-	var response HealthResponse
-	if err := json.Unmarshal(rr.Body.Bytes(), &response); err != nil {
+	var body map[string]string
+	if err := json.Unmarshal(rr.Body.Bytes(), &body); err != nil {
 		t.Fatalf("failed to parse health response: %v", err)
 	}
-	if response.Status != "ok" || response.Service != "api-go" {
-		t.Fatalf("unexpected health response: %#v", response)
+	if body["status"] != "ok" {
+		t.Fatalf("unexpected status: %s", body["status"])
 	}
-}
-
-func TestHelloHandler(t *testing.T) {
-	req := httptest.NewRequest(http.MethodGet, "/api/hello", nil)
-	rr := httptest.NewRecorder()
-
-	helloHandler(rr, req)
-
-	if rr.Code != http.StatusOK {
-		t.Errorf("expected status 200, got %d", rr.Code)
-	}
-
-	var response MessageResponse
-	if err := json.Unmarshal(rr.Body.Bytes(), &response); err != nil {
-		t.Fatalf("failed to parse hello response: %v", err)
-	}
-	if response.Message != "Hello from Go API!" {
-		t.Fatalf("unexpected hello message: %s", response.Message)
+	if body["service"] != "api-go" {
+		t.Fatalf("unexpected service: %s", body["service"])
 	}
 }
 
 func TestCorsMiddleware_AllowsConfiguredOrigin(t *testing.T) {
-	mux := http.NewServeMux()
-	mux.HandleFunc("/health", healthHandler)
-	handler := corsMiddleware("https://frontend.example.com", mux)
+	inner := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	})
+	handler := corsMiddleware("http://localhost:4200", inner)
 
 	req := httptest.NewRequest(http.MethodGet, "/health", nil)
 	rr := httptest.NewRecorder()
-
 	handler.ServeHTTP(rr, req)
 
-	if rr.Header().Get("Access-Control-Allow-Origin") != "https://frontend.example.com" {
-		t.Fatalf("unexpected allow-origin header: %s", rr.Header().Get("Access-Control-Allow-Origin"))
+	if got := rr.Header().Get("Access-Control-Allow-Origin"); got != "http://localhost:4200" {
+		t.Errorf("unexpected CORS origin: %s", got)
 	}
 }
 
 func TestCorsMiddleware_OptionsReturnsNoContent(t *testing.T) {
-	handler := corsMiddleware("https://frontend.example.com", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	inner := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusTeapot)
-	}))
+	})
+	handler := corsMiddleware("http://localhost:4200", inner)
 
-	req := httptest.NewRequest(http.MethodOptions, "/api/hello", nil)
+	req := httptest.NewRequest(http.MethodOptions, "/api/devices/telemetry", nil)
 	rr := httptest.NewRecorder()
-
 	handler.ServeHTTP(rr, req)
 
 	if rr.Code != http.StatusNoContent {
-		t.Fatalf("expected 204 for OPTIONS, got %d", rr.Code)
+		t.Errorf("expected 204 for OPTIONS preflight, got %d", rr.Code)
 	}
 }

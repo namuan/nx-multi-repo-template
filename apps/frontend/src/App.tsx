@@ -1,44 +1,32 @@
-import { useState } from 'react';
-import { Button } from '@nx-polyglot/ui-shared';
-import './App.css';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { ProtectedRoute, AdminRoute } from './components/ProtectedRoute';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Dashboard from './pages/Dashboard';
+import Devices from './pages/Devices';
+import DeviceDetail from './pages/DeviceDetail';
+import Alerts from './pages/Alerts';
+import Geofences from './pages/Geofences';
+import Settings from './pages/Settings';
+import Admin from './pages/Admin';
 
 export default function App() {
-  const [count, setCount] = useState(0);
-
   return (
-    <main className="app">
-      <h1>Nx Polyglot Monorepo</h1>
-      <p>React + Go + Java on a single Nx workspace</p>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/login"    element={<Login />} />
+        <Route path="/register" element={<Register />} />
 
-      <section className="services">
-        <div className="card">
-          <h2>Frontend</h2>
-          <p>React 19 + Vite + TypeScript</p>
-          <Button onClick={() => setCount((c) => c + 1)}>
-            Count: {count}
-          </Button>
-        </div>
+        <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+        <Route path="/devices"   element={<ProtectedRoute><Devices /></ProtectedRoute>} />
+        <Route path="/devices/:id" element={<ProtectedRoute><DeviceDetail /></ProtectedRoute>} />
+        <Route path="/alerts"    element={<ProtectedRoute><Alerts /></ProtectedRoute>} />
+        <Route path="/geofences" element={<ProtectedRoute><Geofences /></ProtectedRoute>} />
+        <Route path="/settings"  element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+        <Route path="/admin"     element={<AdminRoute><Admin /></AdminRoute>} />
 
-        <div className="card">
-          <h2>Go API</h2>
-          <p>
-            Running at{' '}
-            <a href="http://localhost:8081" target="_blank" rel="noreferrer">
-              localhost:8081
-            </a>
-          </p>
-        </div>
-
-        <div className="card">
-          <h2>Java API</h2>
-          <p>
-            Running at{' '}
-            <a href="http://localhost:8082" target="_blank" rel="noreferrer">
-              localhost:8082
-            </a>
-          </p>
-        </div>
-      </section>
-    </main>
+        <Route path="*" element={<Navigate to="/dashboard" replace />} />
+      </Routes>
+    </BrowserRouter>
   );
 }

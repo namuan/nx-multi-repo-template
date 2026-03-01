@@ -1,12 +1,5 @@
 package com.example.apijava;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-@SpringBootApplication
-public class ApiJavaApplication {
-
-  public static void main(String[] args) {
-    SpringApplication.run(ApiJavaApplication.class, args);
-  }
-}
+// Legacy stub — boot entry point moved to com.example.fleet.FleetApplication
+// This class is retained to avoid build errors with leftover test references.
+public class ApiJavaApplication {}
