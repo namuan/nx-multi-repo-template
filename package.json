@@ -9,33 +9,33 @@
     "build": "nx run-many -t build",
     "format": "prettier --write .",
 
-    "setup": "pnpm install && npm run go:tidy && npm run go:sync",
+    "check": "tools/check-prereqs.sh",
+    "setup": "npm run check && pnpm install && npm run go:tidy && npm run go:sync",
     "go:tidy": "cd apps/api-go && go mod tidy",
     "go:sync": "go work sync",
 
-    "db:up": "docker compose up db -d --wait",
-    "db:down": "docker compose stop db",
-    "db:reset": "docker compose down -v && npm run db:up",
-    "db:logs": "docker compose logs -f db",
+    "dev:db:up": "docker compose up db -d --wait",
+    "dev:db:down": "docker compose stop db",
+    "dev:db:reset": "docker compose down -v && npm run dev:db:up",
+    "dev:db:logs": "docker compose logs -f db",
 
-    "up": "docker compose up --build",
-    "up:demo": "docker compose --profile demo up --build",
-    "up:detached": "docker compose up --build -d",
-    "down": "docker compose down",
-    "docker:build": "docker compose build",
+    "dev:up": "docker compose up --build",
+    "dev:up:demo": "docker compose --profile demo up --build",
+    "dev:up:detached": "docker compose up --build -d",
+    "dev:down": "docker compose down; tmux kill-session -t fleet-dev 2>/dev/null; true",
+    "dev:docker:build": "docker compose build",
 
     "dev:frontend": "nx run frontend:serve",
     "dev:go": "nx run api-go:serve",
     "dev:java": "nx run api-java:serve",
     "dev:all": "nx run-many -t serve --parallel=3",
+    "dev:simulate": "go run ./tools/simulator/main.go",
 
-    "simulate": "go run ./tools/simulator/main.go",
+    "dev:logs:go": "docker compose logs -f api-go",
+    "dev:logs:java": "docker compose logs -f api-java",
+    "dev:logs:frontend": "docker compose logs -f frontend",
 
-    "logs:go": "docker compose logs -f api-go",
-    "logs:java": "docker compose logs -f api-java",
-    "logs:frontend": "docker compose logs -f frontend",
-
-    "dev:tmux": "tools/tmux/fleet-dev.sh"
+    "dev:tmux": "npm run check -- --tmux && tools/tmux/fleet-dev.sh"
   },
   "devDependencies": {
     "@nx-tools/nx-container": "7.2.1",

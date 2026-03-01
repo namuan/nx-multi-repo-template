@@ -7,6 +7,6 @@ RUN mvn -f apps/api-java/pom.xml -DskipTests package
 
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
-COPY --from=builder /app/apps/api-java/target/api-java-*.jar app.jar
+COPY --from=builder /app/apps/api-java/target/app.jar app.jar
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]

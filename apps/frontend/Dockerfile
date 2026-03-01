@@ -3,10 +3,10 @@ FROM node:22-alpine AS builder
 WORKDIR /app
 
 # Install pnpm
-RUN corepack enable && corepack prepare pnpm@latest --activate
+RUN corepack enable && corepack prepare pnpm@10 --activate
 
-# Copy workspace manifests
-COPY package.json pnpm-workspace.yaml ./
+# Copy workspace manifests + lockfile
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
 COPY apps/frontend/package.json ./apps/frontend/
 COPY libs/ui-shared/package.json ./libs/ui-shared/
 

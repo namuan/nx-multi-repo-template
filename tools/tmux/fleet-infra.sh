@@ -14,7 +14,7 @@ if [[ ! -x ./node_modules/.bin/nx ]]; then
 fi
 
 echo "⏳ Starting PostgreSQL (waiting until healthy)..."
-npm run db:up
+npm run dev:db:up
 
 # Signal all waiting panes to start their services
 touch .tmux-dev-ready
@@ -26,4 +26,4 @@ echo "  Java API  →  http://localhost:8082"
 echo ""
 
 # Keep the pane alive and useful by tailing DB logs
-npm run db:logs
+npm run dev:db:logs

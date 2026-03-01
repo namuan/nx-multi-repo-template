@@ -1,4 +1,4 @@
-const GO_WS_URL = (import.meta.env.VITE_API_GO_URL ?? 'http://localhost:8081')
+const GO_WS_URL = (import.meta.env['VITE_API_GO_URL'] ?? 'http://localhost:8081')
   .replace(/^http/, 'ws');
 
 export interface TelemetryMessage {
@@ -60,7 +60,7 @@ export class FleetWebSocket {
 
   subscribe(fn: (msg: WsMessage) => void) {
     this.listeners.add(fn);
-    return () => this.listeners.delete(fn);
+    return () => { this.listeners.delete(fn); };
   }
 }
 
