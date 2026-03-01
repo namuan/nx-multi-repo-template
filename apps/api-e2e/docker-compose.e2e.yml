@@ -5,14 +5,21 @@ services:
       POSTGRES_DB: fleet_db
       POSTGRES_USER: fleet_user
       POSTGRES_PASSWORD: fleet_password
-    volumes:
-      - ../../db/schema.sql:/docker-entrypoint-initdb.d/001-schema.sql:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U fleet_user -d fleet_db"]
       interval: 10s
       timeout: 5s
       retries: 5
       start_period: 10s
+
+  db-migrate:
+    image: migrate/migrate:v4.17.1
+    command: ["-path", "/migrations", "-database", "postgres://fleet_user:fleet_password@db:5432/fleet_db?sslmode=disable", "up"]
+    volumes:
+      - ../../db/migrations:/migrations:ro
+    depends_on:
+      db:
+        condition: service_healthy
 
   api-go:
     build:
@@ -26,8 +33,8 @@ services:
       JWT_SECRET: "fleet-super-secret-jwt-key-change-in-production"
       ALLOWED_ORIGIN: "http://localhost:9100"
     depends_on:
-      db:
-        condition: service_healthy
+      db-migrate:
+        condition: service_completed_successfully
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:8080/health || exit 1"]
       interval: 15s
@@ -50,8 +57,8 @@ services:
       JWT_EXPIRATION_MS: "86400000"
       ALLOWED_ORIGIN: "http://localhost:9100"
     depends_on:
-      db:
-        condition: service_healthy
+      db-migrate:
+        condition: service_completed_successfully
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:8080/actuator/health || exit 1"]
       interval: 15s

@@ -172,6 +172,7 @@ The same repository also supports local-process and tmux-based workflows for act
 - `README.md`
 - `LOCAL_DEV.md`
 - `docs/adr/0001-polyglot-monorepo.md`
+- `docs/db-migrations.md`
 - `docs/e2e-architecture.md`
 - `docs/runbook.md`
 - `docs/openapi/api-go.yaml`

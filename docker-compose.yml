@@ -10,13 +10,40 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U fleet_user -d fleet_db"]
       interval: 10s
       timeout: 5s
       retries: 5
       start_period: 10s
+
+  db-migrate:
+    image: migrate/migrate:v4.17.1
+    command: ["-path", "/migrations", "-database", "postgres://fleet_user:fleet_password@db:5432/fleet_db?sslmode=disable", "up"]
+    volumes:
+      - ./db/migrations:/migrations:ro
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db-seed:
+    image: postgres:16-alpine
+    environment:
+      PGPASSWORD: fleet_password
+    command:
+      - sh
+      - -c
+      - >-
+        if [ "$(psql -h db -U fleet_user -d fleet_db -tAc 'SELECT COUNT(*) FROM tenants;' | xargs)" = "0" ]; then
+          psql -h db -U fleet_user -d fleet_db -v ON_ERROR_STOP=1 -f /seed/demo.sql;
+        else
+          echo "Demo seed already exists, skipping";
+        fi
+    volumes:
+      - ./db/seeds/demo.sql:/seed/demo.sql:ro
+    depends_on:
+      db-migrate:
+        condition: service_completed_successfully
 
   # ─── Go API (Telemetry + WebSocket) ─────────────────────────────────────────
   api-go:
@@ -31,8 +58,8 @@ services:
       JWT_SECRET: "fleet-super-secret-jwt-key-change-in-production"
       ALLOWED_ORIGIN: "http://localhost:9100"
     depends_on:
-      db:
-        condition: service_healthy
+      db-seed:
+        condition: service_completed_successfully
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:8080/health || exit 1"]
       interval: 15s
@@ -56,8 +83,8 @@ services:
       JWT_EXPIRATION_MS: "86400000"
       ALLOWED_ORIGIN: "http://localhost:9100"
     depends_on:
-      db:
-        condition: service_healthy
+      db-seed:
+        condition: service_completed_successfully
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:8080/actuator/health || exit 1"]
       interval: 15s

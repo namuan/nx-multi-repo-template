@@ -146,7 +146,7 @@ once after cloning, and again after changes to `package.json` or `go.mod`.
 npm run dev:db:up
 ```
 
-Starts only PostgreSQL in Docker (with the seed data already loaded). The other services run locally and connect to it.
+Starts PostgreSQL in Docker, runs schema migrations from `db/migrations`, and applies demo seed data from `db/seeds/demo.sql`.
 
 ### Step 3 — Start services
 
@@ -244,9 +244,11 @@ Each tenant's fleet is fully isolated — logging in as `alice@acme.com` shows o
 
 | Command                | What it does                                |
 |------------------------|---------------------------------------------|
-| `npm run dev:db:up`    | Start PostgreSQL and wait until healthy     |
+| `npm run db:migrate`   | Start PostgreSQL (if needed) and apply all schema migrations |
+| `npm run db:seed`      | Apply demo seed data after migrations (safe to re-run) |
+| `npm run dev:db:up`    | Start PostgreSQL, run schema migrations, and apply demo seed data |
 | `npm run dev:db:down`  | Stop PostgreSQL (data preserved)            |
-| `npm run dev:db:reset` | Destroy all data and re-run the seed script |
+| `npm run dev:db:reset` | Destroy all data, re-run schema migrations, and re-apply demo seed data |
 | `npm run dev:db:logs`  | Tail PostgreSQL logs                        |
 
 ### Local development
@@ -273,7 +275,7 @@ Each tenant's fleet is fully isolated — logging in as `alice@acme.com` shows o
 
 | Command                    | What it does                                                                                |
 |----------------------------|---------------------------------------------------------------------------------------------|
-| `npm run test:e2e:backend` | Runs Playwright backend API E2E (`apps/api-e2e`) against db + api-go + api-java with schema-only DB bootstrap and test-provisioned data |
+| `npm run test:e2e:backend` | Runs Playwright backend API E2E (`apps/api-e2e`) against db + api-go + api-java with migration-based DB bootstrap and test-provisioned data |
 | `npm run test:e2e:backend:ci` | Runs the same backend API E2E suite with CI configuration and reporting defaults            |
 | `npm run test:e2e:frontend` | Runs Playwright UI E2E (`apps/frontend-e2e`) against real frontend + backend APIs with API-seeded test data |
 | `npm run test:e2e:frontend:ui` | Runs the frontend Playwright suite in interactive Playwright UI mode |
@@ -291,7 +293,7 @@ Each tenant's fleet is fully isolated — logging in as `alice@acme.com` shows o
 npm run dev:db:reset
 ```
 
-Removes the Docker volume (all data), recreates the container, and re-runs `db/init.sql` automatically.
+Removes the Docker volume (all data), recreates the container, reapplies `db/migrations`, and then reapplies `db/seeds/demo.sql` automatically.
 
 ---
 

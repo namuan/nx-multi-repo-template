@@ -48,10 +48,11 @@ Ports exposed to host:
 
 ### 3) Database Bootstrap
 
-- Uses schema-only initialization via `db/schema.sql`
-- Does **not** use `db/init.sql` for E2E
+- Uses versioned schema migrations from `db/migrations`
+- Runs a dedicated `db-migrate` service before APIs start
+- Does **not** apply demo seed data for E2E
 
-This avoids hidden coupling to seeded/demo users, devices, and alerts.
+This avoids hidden coupling to local demo users, devices, and alerts.
 
 ### 4) Test Data Provisioning
 

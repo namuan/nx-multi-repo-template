@@ -82,6 +82,7 @@ helm upgrade --install api-go charts/api-go -f charts/api-go/values-production.y
 
 - Go API OpenAPI spec: `docs/openapi/api-go.yaml`
 - Java API OpenAPI spec: `docs/openapi/api-java.yaml`
+- Database migration guide: `docs/db-migrations.md`
 
 ## Nx Affected (CI)
 

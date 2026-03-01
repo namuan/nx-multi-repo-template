@@ -1,4 +1,4 @@
--- Fleet Management Platform - PostgreSQL Schema (E2E schema-only)
+-- Fleet Management Platform - PostgreSQL Schema
 -- Multi-tenant: shared DB + tenant_id on every table
 
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
