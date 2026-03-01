@@ -1,7 +1,7 @@
 import { defineConfig } from '@playwright/test';
 
-const javaApiUrl = process.env['JAVA_API_URL'] ?? 'http://127.0.0.1:19102';
-const goApiUrl = process.env['GO_API_URL'] ?? 'http://127.0.0.1:19101';
+const javaApiUrl = process.env['E2E_JAVA_API_URL'] ?? 'http://127.0.0.1:19102';
+const goApiUrl = process.env['E2E_GO_API_URL'] ?? 'http://127.0.0.1:19101';
 
 export default defineConfig({
   testDir: './src',

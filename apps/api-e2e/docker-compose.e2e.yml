@@ -6,7 +6,7 @@ services:
       POSTGRES_USER: fleet_user
       POSTGRES_PASSWORD: fleet_password
     volumes:
-      - ../../db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ../../db/schema.sql:/docker-entrypoint-initdb.d/001-schema.sql:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U fleet_user -d fleet_db"]
       interval: 10s
@@ -58,16 +58,3 @@ services:
       timeout: 5s
       retries: 5
       start_period: 30s
-
-  simulator:
-    build:
-      context: ../..
-      dockerfile: tools/simulator/Dockerfile
-    environment:
-      GO_API_URL: "http://api-go:8080"
-      INTERVAL_MS: "1000"
-      FAST_FORWARD_EVENTS: "25"
-      FAST_FORWARD_STEP_MS: "15000"
-    depends_on:
-      api-go:
-        condition: service_healthy
