@@ -1,8 +1,10 @@
 # Nx Polyglot Monorepo
 
-**Nx + React (Vite + TS) + Go + Java (Spring Boot + Gradle)**
+**Nx + React (Vite + TS) + Go + Java (Spring Boot + Maven)**
 
 A production-ready polyglot monorepo blueprint with Dockerfiles, Helm charts, CI pipeline, and docker-compose.
+
+`apps/api-java` requires JDK 21.
 
 ## Stack
 
@@ -10,7 +12,7 @@ A production-ready polyglot monorepo blueprint with Dockerfiles, Helm charts, CI
 |-----|-----------|
 | `apps/frontend` | React 19, Vite, TypeScript |
 | `apps/api-go` | Go 1.23, net/http |
-| `apps/api-java` | Spring Boot 3.4, Kotlin, Gradle |
+| `apps/api-java` | Spring Boot 3.4, Java 21, Maven |
 | `libs/ui-shared` | Shared React components |
 
 ## Quick Start
@@ -68,7 +70,7 @@ nx-polyglot-monorepo/
 ├── apps/
 │   ├── frontend/          # React + Vite + TS
 │   ├── api-go/            # Go HTTP API
-│   └── api-java/          # Spring Boot + Kotlin
+│   └── api-java/          # Spring Boot + Java
 ├── libs/
 │   └── ui-shared/         # Shared React components
 ├── charts/

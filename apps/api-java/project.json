@@ -6,30 +6,30 @@
   "targets": {
     "build": {
       "executor": "nx:run-commands",
-      "outputs": ["{workspaceRoot}/apps/api-java/build"],
+      "outputs": ["{workspaceRoot}/apps/api-java/target"],
       "options": {
-        "command": "./gradlew :build -x test --no-daemon",
+        "command": "mvn -DskipTests package",
         "cwd": "apps/api-java"
       }
     },
     "serve": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "./gradlew :bootRun --no-daemon",
+        "command": "mvn spring-boot:run",
         "cwd": "apps/api-java"
       }
     },
     "test": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "./gradlew :test --no-daemon",
+        "command": "mvn test",
         "cwd": "apps/api-java"
       }
     },
     "lint": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "./gradlew :ktlintCheck --no-daemon",
+        "command": "mvn checkstyle:check",
         "cwd": "apps/api-java"
       }
     },

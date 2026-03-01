@@ -25,10 +25,10 @@ apps/api-go/bin/
 apps/api-go/*.test
 apps/api-go/coverage.out
 
-# Java / Gradle
+# Java / Maven
+apps/api-java/target/
 .gradle/
 apps/api-java/.gradle/
-apps/api-java/build/
 
 # Helm
 charts/**/*.tgz

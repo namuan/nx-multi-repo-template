@@ -38,7 +38,7 @@ jobs:
         with:
           distribution: temurin
           java-version: '21'
-          cache: gradle
+          cache: maven
 
       - name: Install Node dependencies
         run: pnpm install --frozen-lockfile
