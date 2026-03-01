@@ -41,13 +41,13 @@ func TestCorsMiddleware_AllowsConfiguredOrigin(t *testing.T) {
 	inner := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 	})
-	handler := corsMiddleware("http://localhost:4200", inner)
+	handler := corsMiddleware("http://localhost:9100", inner)
 
 	req := httptest.NewRequest(http.MethodGet, "/health", nil)
 	rr := httptest.NewRecorder()
 	handler.ServeHTTP(rr, req)
 
-	if got := rr.Header().Get("Access-Control-Allow-Origin"); got != "http://localhost:4200" {
+	if got := rr.Header().Get("Access-Control-Allow-Origin"); got != "http://localhost:9100" {
 		t.Errorf("unexpected CORS origin: %s", got)
 	}
 }
@@ -56,7 +56,7 @@ func TestCorsMiddleware_OptionsReturnsNoContent(t *testing.T) {
 	inner := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusTeapot)
 	})
-	handler := corsMiddleware("http://localhost:4200", inner)
+	handler := corsMiddleware("http://localhost:9100", inner)
 
 	req := httptest.NewRequest(http.MethodOptions, "/api/devices/telemetry", nil)
 	rr := httptest.NewRecorder()

@@ -24,12 +24,12 @@ services:
       context: .
       dockerfile: apps/api-go/Dockerfile
     ports:
-      - "8081:8080"
+      - "9101:8080"
     environment:
       PORT: "8080"
       DATABASE_URL: "postgres://fleet_user:fleet_password@db:5432/fleet_db?sslmode=disable"
       JWT_SECRET: "fleet-super-secret-jwt-key-change-in-production"
-      ALLOWED_ORIGIN: "http://localhost:4200"
+      ALLOWED_ORIGIN: "http://localhost:9100"
     depends_on:
       db:
         condition: service_healthy
@@ -46,7 +46,7 @@ services:
       context: .
       dockerfile: apps/api-java/Dockerfile
     ports:
-      - "8082:8080"
+      - "9102:8080"
     environment:
       SERVER_PORT: "8080"
       SPRING_DATASOURCE_URL: "jdbc:postgresql://db:5432/fleet_db"
@@ -70,7 +70,7 @@ services:
       context: .
       dockerfile: apps/frontend/Dockerfile
     ports:
-      - "4200:80"
+      - "9100:80"
     depends_on:
       api-go:
         condition: service_healthy

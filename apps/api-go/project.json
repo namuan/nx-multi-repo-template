@@ -16,7 +16,10 @@
       "executor": "nx:run-commands",
       "options": {
         "command": "go run .",
-        "cwd": "apps/api-go"
+        "cwd": "apps/api-go",
+        "env": {
+          "PORT": "9101"
+        }
       }
     },
     "test": {

@@ -3,7 +3,7 @@ info:
   title: api-java
   version: 1.0.0
 servers:
-  - url: http://localhost:8082
+  - url: http://localhost:9102
 paths:
   /actuator/health:
     get:

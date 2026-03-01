@@ -42,6 +42,6 @@ docker compose up --build
 ```
 
 ```bash
-curl http://localhost:8081/health
-curl http://localhost:8082/actuator/health
+curl http://localhost:9101/health
+curl http://localhost:9102/actuator/health
 ```

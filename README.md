@@ -53,8 +53,8 @@ Use `.env.example` as the baseline for local development.
 | `PORT` | `api-go` | `8080` | Go API listen port |
 | `ALLOWED_ORIGIN` | `api-go` | `https://frontend.example.com` | CORS allowed origin |
 | `SERVER_PORT` | `api-java` | `8080` | Java API listen port |
-| `VITE_API_GO_URL` | `frontend` | `http://localhost:8081` | Frontend URL for Go API |
-| `VITE_API_JAVA_URL` | `frontend` | `http://localhost:8082` | Frontend URL for Java API |
+| `VITE_API_GO_URL` | `frontend` | `http://localhost:9101` | Frontend URL for Go API |
+| `VITE_API_JAVA_URL` | `frontend` | `http://localhost:9102` | Frontend URL for Java API |
 
 Copy and adapt as needed:
 

@@ -16,7 +16,10 @@
       "executor": "nx:run-commands",
       "options": {
         "command": "mvn spring-boot:run",
-        "cwd": "apps/api-java"
+        "cwd": "apps/api-java",
+        "env": {
+          "SERVER_PORT": "9102"
+        }
       }
     },
     "test": {

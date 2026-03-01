@@ -1,4 +1,4 @@
-const GO_WS_URL = (import.meta.env['VITE_API_GO_URL'] ?? 'http://localhost:8081')
+const GO_WS_URL = (import.meta.env['VITE_API_GO_URL'] ?? 'http://localhost:9101')
   .replace(/^http/, 'ws');
 
 export interface TelemetryMessage {

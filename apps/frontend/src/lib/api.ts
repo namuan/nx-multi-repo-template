@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const GO_URL = import.meta.env['VITE_API_GO_URL'] ?? 'http://localhost:8081';
-const JAVA_URL = import.meta.env['VITE_API_JAVA_URL'] ?? 'http://localhost:8082';
+const GO_URL = import.meta.env['VITE_API_GO_URL'] ?? 'http://localhost:9101';
+const JAVA_URL = import.meta.env['VITE_API_JAVA_URL'] ?? 'http://localhost:9102';
 
 function makeClient(baseURL: string) {
   const client = axios.create({ baseURL, timeout: 10_000 });

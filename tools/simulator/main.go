@@ -53,7 +53,7 @@ var devices = []device{
 }
 
 func main() {
-	apiURL := getEnv("GO_API_URL", "http://localhost:8081")
+	apiURL := getEnv("GO_API_URL", "http://localhost:9101")
 	intervalMs, _ := strconv.Atoi(getEnv("INTERVAL_MS", "3000"))
 	interval := time.Duration(intervalMs) * time.Millisecond
 

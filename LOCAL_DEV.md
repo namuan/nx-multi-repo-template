@@ -47,9 +47,9 @@ Builds all images and starts PostgreSQL, the Go API, the Java API, and the React
 
 | Service | URL |
 |---------|-----|
-| Frontend | http://localhost:4200 |
-| Go API | http://localhost:8081 |
-| Java API | http://localhost:8082 |
+| Frontend | http://localhost:9100 |
+| Go API | http://localhost:9101 |
+| Java API | http://localhost:9102 |
 | PostgreSQL | localhost:5432 |
 
 **4. (Optional) Start with the device simulator**
@@ -98,10 +98,10 @@ tmux will:
 ```
 ┌──────────────────┬──────────────────┐
 │  🗄 PostgreSQL   │  🐹 Go API       │
-│    (+ DB logs)   │    :8081         │
+│    (+ DB logs)   │    :9101         │
 ├──────────────────┼──────────────────┤
 │  ⚛  Frontend    │  ☕ Java API      │
-│    :4200         │    :8082         │
+│    :9100         │    :9102         │
 └──────────────────┴──────────────────┘
   window 1: dev          (Ctrl-b 1)
 
@@ -156,13 +156,13 @@ Starts only PostgreSQL in Docker (with the seed data already loaded). The other 
 Open three terminal tabs and run one command in each:
 
 ```sh
-# Tab 1 — React frontend (http://localhost:4200, hot reload)
+# Tab 1 — React frontend (http://localhost:9100, hot reload)
 npm run dev:frontend
 
-# Tab 2 — Go API (http://localhost:8081, telemetry + WebSocket)
+# Tab 2 — Go API (http://localhost:9101, telemetry + WebSocket)
 npm run dev:go
 
-# Tab 3 — Java API (http://localhost:8082, fleet REST)
+# Tab 3 — Java API (http://localhost:9102, fleet REST)
 npm run dev:java
 ```
 
@@ -194,8 +194,8 @@ The defaults work out of the box for both Docker and local-process setups. Key v
 
 | Variable | Default | Used by |
 |----------|---------|---------|
-| `VITE_API_GO_URL` | `http://localhost:8081` | Frontend → Go API |
-| `VITE_API_JAVA_URL` | `http://localhost:8082` | Frontend → Java API |
+| `VITE_API_GO_URL` | `http://localhost:9101` | Frontend → Go API |
+| `VITE_API_JAVA_URL` | `http://localhost:9102` | Frontend → Java API |
 | `DATABASE_URL` | `postgres://fleet_user:fleet_password@localhost:5432/fleet_db` | Go API |
 | `SPRING_DATASOURCE_URL` | `jdbc:postgresql://localhost:5432/fleet_db` | Java API |
 | `JWT_SECRET` | `fleet-super-secret-jwt-key-…` | Both APIs (must match) |
@@ -256,9 +256,9 @@ Each tenant's fleet is fully isolated — logging in as `alice@acme.com` shows o
 | Command | What it does |
 |---------|-------------|
 | `npm run dev:tmux` | **One command** — opens a tmux session with all services in split panes |
-| `npm run dev:frontend` | Start Vite dev server (port 4200, hot reload) |
-| `npm run dev:go` | Start Go API (port 8081) |
-| `npm run dev:java` | Start Spring Boot (port 8082) |
+| `npm run dev:frontend` | Start Vite dev server (port 9100, hot reload) |
+| `npm run dev:go` | Start Go API (port 9101) |
+| `npm run dev:java` | Start Spring Boot (port 9102) |
 | `npm run dev:all` | Start all three services in parallel (no tmux) |
 | `npm run dev:simulate` | Run the GPS device simulator against the local Go API |
 
@@ -321,7 +321,7 @@ npm run dev:db:reset
 npm run dev:down
 ```
 
-Then check for other processes on ports 4200, 8081, 8082, or 5432.
+Then check for other processes on ports 9100, 9101, 9102, or 5432.
 
 **Go dependencies missing after a pull**
 
