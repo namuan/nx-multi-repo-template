@@ -35,6 +35,7 @@
     "dev:logs:java": "docker compose logs -f api-java",
     "dev:logs:frontend": "docker compose logs -f frontend",
     "dev:logs:all": "tools/tmux/logs-all.sh",
+    "test:e2e:backend": "bash tools/e2e/backend-api-events.sh",
 
     "dev:tmux": "npm run check -- --tmux && tools/tmux/fleet-dev.sh"
   },
