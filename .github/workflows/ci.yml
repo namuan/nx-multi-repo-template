@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+  pull-requests: write
+
 jobs:
   main:
     runs-on: ubuntu-latest
@@ -73,3 +77,57 @@ jobs:
       - name: Docker build (affected, no push)
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: pnpm exec nx affected -t docker:build --parallel=2 --base=$NX_BASE --head=$NX_HEAD
+
+  api-e2e:
+    name: Backend API E2E
+    runs-on: ubuntu-latest
+    needs: main
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: latest
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+
+      - name: Install Node dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run backend API e2e
+        id: run_api_e2e
+        continue-on-error: true
+        run: pnpm run test:e2e:backend:ci
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-e2e-playwright-report
+          path: |
+            dist/.playwright/apps/api-e2e/report
+            dist/.playwright/apps/api-e2e/test-results
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Comment backend e2e report
+        if: always() && github.event_name == 'pull_request'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: api-e2e-report
+          message: |
+            ## Backend API E2E Report
+            - Status: **${{ steps.run_api_e2e.outcome }}**
+            - Artifact: **api-e2e-playwright-report**
+            - Run: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+      - name: Fail job if backend e2e failed
+        if: steps.run_api_e2e.outcome == 'failure'
+        run: exit 1

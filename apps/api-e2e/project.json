@@ -2,13 +2,21 @@
   "name": "api-e2e",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
+  "implicitDependencies": ["api-go", "api-java", "frontend"],
   "tags": ["scope:test", "type:e2e"],
   "targets": {
     "e2e": {
       "executor": "@nx/playwright:playwright",
+      "outputs": ["{workspaceRoot}/dist/.playwright/apps/api-e2e"],
       "options": {
         "config": "apps/api-e2e/playwright.config.ts",
         "skipInstall": true
+      },
+      "configurations": {
+        "ci": {
+          "config": "apps/api-e2e/playwright.config.ts",
+          "skipInstall": true
+        }
       }
     }
   }

@@ -31,6 +31,7 @@
     "dev:logs:frontend": "docker compose logs -f frontend",
     "dev:logs:all": "tools/tmux/logs-all.sh",
     "test:e2e:backend": "nx run api-e2e:e2e",
+    "test:e2e:backend:ci": "nx run api-e2e:e2e --configuration=ci",
     "dev:tmux": "npm run check -- --tmux && tools/tmux/fleet-dev.sh"
   },
   "devDependencies": {
