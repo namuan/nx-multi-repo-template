@@ -179,7 +179,7 @@ VALUES (
   '00000000-0000-0000-0000-000000000010',
   '00000000-0000-0000-0000-000000000001',
   'admin@fleetpilot.io',
-  '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj2NvFhMvfQS', -- Admin123!
+  '$2a$12$GHw2wLrcHGCbr/kEdVqRCuWwTya.qVXxQLJEW.kp/EN5L7Q0javOS', -- Admin123!
   'Platform Administrator',
   'fleet_admin',
   true
@@ -193,11 +193,11 @@ VALUES ('10000000-0000-0000-0000-000000000001', 'Acme Logistics', 'acme', '#3B82
 INSERT INTO users (id, tenant_id, email, password_hash, full_name, role)
 VALUES
   ('10000000-0000-0000-0000-000000000010', '10000000-0000-0000-0000-000000000001',
-   'alice@acme.com', '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj2NvFhMvfQS', 'Alice Chen', 'fleet_admin'),
+  'alice@acme.com', '$2a$12$f/pBdgde3eaS3krDMm7bsuDei7q2kYbL13yw0/m1sSbiiLQIF8oAu', 'Alice Chen', 'fleet_admin'),
   ('10000000-0000-0000-0000-000000000011', '10000000-0000-0000-0000-000000000001',
-   'bob@acme.com', '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj2NvFhMvfQS', 'Bob Martinez', 'dispatcher'),
+  'bob@acme.com', '$2a$12$f/pBdgde3eaS3krDMm7bsuDei7q2kYbL13yw0/m1sSbiiLQIF8oAu', 'Bob Martinez', 'dispatcher'),
   ('10000000-0000-0000-0000-000000000012', '10000000-0000-0000-0000-000000000001',
-   'carol@acme.com', '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj2NvFhMvfQS', 'Carol Williams', 'driver');
+  'carol@acme.com', '$2a$12$f/pBdgde3eaS3krDMm7bsuDei7q2kYbL13yw0/m1sSbiiLQIF8oAu', 'Carol Williams', 'driver');
 
 -- Acme devices (SF Bay Area)
 INSERT INTO devices (id, tenant_id, name, type, api_key, status, last_lat, last_lng, last_speed, last_heading, last_seen, driver_name, license_plate)
@@ -265,9 +265,9 @@ VALUES ('20000000-0000-0000-0000-000000000001', 'SwiftFleet', 'swift', '#10B981'
 INSERT INTO users (id, tenant_id, email, password_hash, full_name, role)
 VALUES
   ('20000000-0000-0000-0000-000000000010', '20000000-0000-0000-0000-000000000001',
-   'diana@swiftfleet.io', '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj2NvFhMvfQS', 'Diana Park', 'fleet_admin'),
+  'diana@swiftfleet.io', '$2a$12$f/pBdgde3eaS3krDMm7bsuDei7q2kYbL13yw0/m1sSbiiLQIF8oAu', 'Diana Park', 'fleet_admin'),
   ('20000000-0000-0000-0000-000000000011', '20000000-0000-0000-0000-000000000001',
-   'evan@swiftfleet.io', '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj2NvFhMvfQS', 'Evan Torres', 'dispatcher');
+  'evan@swiftfleet.io', '$2a$12$f/pBdgde3eaS3krDMm7bsuDei7q2kYbL13yw0/m1sSbiiLQIF8oAu', 'Evan Torres', 'dispatcher');
 
 -- SwiftFleet devices (Chicago)
 INSERT INTO devices (id, tenant_id, name, type, api_key, status, last_lat, last_lng, last_speed, last_heading, last_seen, driver_name, license_plate)
@@ -316,7 +316,7 @@ VALUES ('30000000-0000-0000-0000-000000000001', 'Urban Delivery Co', 'urban', '#
 INSERT INTO users (id, tenant_id, email, password_hash, full_name, role)
 VALUES
   ('30000000-0000-0000-0000-000000000010', '30000000-0000-0000-0000-000000000001',
-   'frank@urbandel.co', '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj2NvFhMvfQS', 'Frank Garcia', 'fleet_admin');
+  'frank@urbandel.co', '$2a$12$f/pBdgde3eaS3krDMm7bsuDei7q2kYbL13yw0/m1sSbiiLQIF8oAu', 'Frank Garcia', 'fleet_admin');
 
 -- Urban devices (NYC)
 INSERT INTO devices (id, tenant_id, name, type, api_key, status, last_lat, last_lng, last_speed, last_heading, last_seen, driver_name, license_plate)

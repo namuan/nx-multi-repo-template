@@ -74,20 +74,20 @@ export default function Login() {
             Demo credentials
           </div>
           {[
-            { label: 'Platform Admin', email: 'admin@fleetpilot.io' },
-            { label: 'Acme Logistics', email: 'alice@acme.com' },
-            { label: 'SwiftFleet',     email: 'diana@swiftfleet.io' },
+            { label: 'Platform Admin', email: 'admin@fleetpilot.io', password: 'Admin123!' },
+            { label: 'Acme Logistics', email: 'alice@acme.com', password: 'Demo123!' },
+            { label: 'SwiftFleet',     email: 'diana@swiftfleet.io', password: 'Demo123!' },
           ].map(d => (
             <div key={d.email} style={{ fontSize: 12, marginBottom: 4 }}>
               <strong style={{ color: 'var(--text-secondary)' }}>{d.label}:</strong>{' '}
               <button
                 type="button"
                 style={{ background: 'none', border: 'none', color: 'var(--brand)', fontSize: 12, padding: 0 }}
-                onClick={() => { setEmail(d.email); setPassword('Demo123!'); }}
+                onClick={() => { setEmail(d.email); setPassword(d.password); }}
               >
                 {d.email}
               </button>
-              {' / '}Demo123!
+              {' / '}{d.password}
             </div>
           ))}
         </div>
