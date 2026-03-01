@@ -275,6 +275,9 @@ Each tenant's fleet is fully isolated — logging in as `alice@acme.com` shows o
 |----------------------------|---------------------------------------------------------------------------------------------|
 | `npm run test:e2e:backend` | Runs Playwright backend API E2E (`apps/api-e2e`) against db + api-go + api-java with schema-only DB bootstrap and test-provisioned data |
 | `npm run test:e2e:backend:ci` | Runs the same backend API E2E suite with CI configuration and reporting defaults            |
+| `npm run test:e2e:frontend` | Runs Playwright UI E2E (`apps/frontend-e2e`) against real frontend + backend APIs with API-seeded test data |
+| `npm run test:e2e:frontend:ui` | Runs the frontend Playwright suite in interactive Playwright UI mode |
+| `npm run test:e2e:frontend:ci` | Runs the same frontend UI E2E suite with CI configuration and reporting defaults |
 | `npm run lint`             | Lint all projects (Nx affected)                                                             |
 | `npm run test`             | Run all test suites                                                                         |
 | `npm run build`            | Production build for all projects                                                           |
