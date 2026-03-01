@@ -1,0 +1,25 @@
+replicaCount: 3
+
+image:
+  tag: production
+
+autoscaling:
+  enabled: true
+  minReplicas: 3
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 70
+
+resources:
+  limits:
+    cpu: 600m
+    memory: 768Mi
+  requests:
+    cpu: 300m
+    memory: 384Mi
+
+networkPolicy:
+  enabled: true
+
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 2

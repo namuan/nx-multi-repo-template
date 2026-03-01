@@ -1,0 +1,8 @@
+node_modules/
+dist/
+coverage/
+.nx/
+tmp/
+apps/api-java/target/
+apps/api-go/bin/
+charts/**/templates/*.yaml

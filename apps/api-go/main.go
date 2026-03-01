@@ -1,10 +1,16 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
-	"log"
+	"log/slog"
 	"net/http"
 	"os"
+	"os/signal"
+	"syscall"
+	"time"
+
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 type HealthResponse struct {
@@ -31,9 +37,9 @@ func helloHandler(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func corsMiddleware(next http.Handler) http.Handler {
+func corsMiddleware(allowedOrigin string, next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Origin", allowedOrigin)
 		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 		if r.Method == http.MethodOptions {
@@ -45,19 +51,51 @@ func corsMiddleware(next http.Handler) http.Handler {
 }
 
 func main() {
+	logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
+	slog.SetDefault(logger)
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
 	}
 
+	allowedOrigin := os.Getenv("ALLOWED_ORIGIN")
+	if allowedOrigin == "" {
+		allowedOrigin = "https://frontend.example.com"
+	}
+
 	mux := http.NewServeMux()
 	mux.HandleFunc("/health", healthHandler)
 	mux.HandleFunc("/api/hello", helloHandler)
+	mux.Handle("/metrics", promhttp.Handler())
 
-	handler := corsMiddleware(mux)
+	handler := corsMiddleware(allowedOrigin, mux)
 
-	log.Printf("api-go listening on :%s", port)
-	if err := http.ListenAndServe(":"+port, handler); err != nil {
-		log.Fatalf("server error: %v", err)
+	server := &http.Server{
+		Addr:              ":" + port,
+		Handler:           handler,
+		ReadHeaderTimeout: 5 * time.Second,
 	}
+
+	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
+	defer stop()
+
+	go func() {
+		<-ctx.Done()
+		shutdownCtx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cancel()
+
+		slog.Info("shutting down api-go")
+		if err := server.Shutdown(shutdownCtx); err != nil {
+			slog.Error("graceful shutdown failed", "error", err)
+		}
+	}()
+
+	slog.Info("api-go listening", "port", port, "allowedOrigin", allowedOrigin)
+	if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+		slog.Error("server error", "error", err)
+		os.Exit(1)
+	}
+
+	slog.Info("api-go stopped")
 }

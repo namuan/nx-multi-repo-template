@@ -2,28 +2,36 @@
   "name": "nx-polyglot-monorepo",
   "private": true,
   "scripts": {
-    "nx": "nx"
+    "nx": "nx",
+    "prepare": "husky",
+    "lint": "nx run-many -t lint",
+    "test": "nx run-many -t test",
+    "build": "nx run-many -t build",
+    "format": "prettier --write ."
   },
   "devDependencies": {
-    "@nx-tools/nx-container": "latest",
-    "@nx/eslint": "latest",
-    "@nx/js": "latest",
-    "@nx/react": "latest",
-    "@nx/vite": "latest",
+    "@nx-tools/nx-container": "7.2.1",
+    "@nx/eslint": "22.5.3",
+    "@nx/js": "22.5.3",
+    "@nx/react": "22.5.3",
+    "@nx/vite": "22.5.3",
     "@nx/vitest": "22.5.3",
     "@testing-library/react": "16.3.2",
     "@types/node": "25.3.3",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@typescript-eslint/parser": "8.56.1",
-    "@vitejs/plugin-react": "latest",
+    "@vitejs/plugin-react": "5.1.4",
     "eslint": "^9.0.0",
+    "husky": "9.1.7",
     "jsdom": "28.1.0",
-    "nx": "latest",
+    "lint-staged": "15.5.2",
+    "nx": "22.5.3",
+    "prettier": "3.6.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "typescript": "~5.7.0",
-    "vite": "latest",
-    "vitest": "latest"
+    "vite": "7.3.1",
+    "vitest": "4.0.18"
   }
 }

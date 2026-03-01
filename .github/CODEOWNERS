@@ -1,0 +1,8 @@
+* @your-org/platform-team
+
+/apps/frontend/ @your-org/frontend-team
+/apps/api-go/ @your-org/backend-team
+/apps/api-java/ @your-org/backend-team
+/libs/ui-shared/ @your-org/frontend-team
+/charts/ @your-org/platform-team
+/.github/workflows/ @your-org/platform-team

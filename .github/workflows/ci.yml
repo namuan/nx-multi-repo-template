@@ -43,6 +43,15 @@ jobs:
       - name: Install Node dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Install govulncheck
+        run: go install golang.org/x/vuln/cmd/govulncheck@latest
+
+      - name: Dependency vulnerability scan
+        run: |
+          pnpm audit --audit-level=high
+          (cd apps/api-go && govulncheck ./...)
+          (cd apps/api-java && mvn -DskipTests org.owasp:dependency-check-maven:check -DfailBuildOnCVSS=7)
+
       - name: Derive SHAs for nx affected
         uses: nrwl/nx-set-shas@v4
 

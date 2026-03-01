@@ -1,0 +1,20 @@
+replicaCount: 2
+
+image:
+  tag: staging
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 4
+
+resources:
+  limits:
+    cpu: 300m
+    memory: 192Mi
+  requests:
+    cpu: 100m
+    memory: 96Mi
+
+networkPolicy:
+  enabled: true

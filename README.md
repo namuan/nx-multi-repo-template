@@ -44,6 +44,24 @@ docker compose up
 docker build -f apps/api-go/Dockerfile -t api-go .
 ```
 
+## Environment Variables
+
+Use `.env.example` as the baseline for local development.
+
+| Variable | Service | Default | Purpose |
+|---|---|---|---|
+| `PORT` | `api-go` | `8080` | Go API listen port |
+| `ALLOWED_ORIGIN` | `api-go` | `https://frontend.example.com` | CORS allowed origin |
+| `SERVER_PORT` | `api-java` | `8080` | Java API listen port |
+| `VITE_API_GO_URL` | `frontend` | `http://localhost:8081` | Frontend URL for Go API |
+| `VITE_API_JAVA_URL` | `frontend` | `http://localhost:8082` | Frontend URL for Java API |
+
+Copy and adapt as needed:
+
+```bash
+cp .env.example .env
+```
+
 ## Kubernetes (Helm)
 
 ```bash
@@ -54,7 +72,16 @@ helm upgrade --install api-go charts/api-go
 helm upgrade --install frontend charts/frontend
 helm upgrade --install api-go charts/api-go
 helm upgrade --install api-java charts/api-java
+
+# Deploy with environment-specific values
+helm upgrade --install api-go charts/api-go -f charts/api-go/values-staging.yaml
+helm upgrade --install api-go charts/api-go -f charts/api-go/values-production.yaml
 ```
+
+## API Specs
+
+- Go API OpenAPI spec: `docs/openapi/api-go.yaml`
+- Java API OpenAPI spec: `docs/openapi/api-java.yaml`
 
 ## Nx Affected (CI)
 

@@ -1,0 +1,35 @@
+openapi: 3.0.3
+info:
+  title: api-go
+  version: 1.0.0
+servers:
+  - url: http://localhost:8081
+paths:
+  /health:
+    get:
+      summary: Health check
+      responses:
+        '200':
+          description: Service health
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  service:
+                    type: string
+  /api/hello:
+    get:
+      summary: Hello endpoint
+      responses:
+        '200':
+          description: Greeting message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string

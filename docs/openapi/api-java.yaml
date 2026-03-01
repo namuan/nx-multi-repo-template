@@ -1,0 +1,26 @@
+openapi: 3.0.3
+info:
+  title: api-java
+  version: 1.0.0
+servers:
+  - url: http://localhost:8082
+paths:
+  /actuator/health:
+    get:
+      summary: Health check
+      responses:
+        '200':
+          description: Service health
+  /api/hello:
+    get:
+      summary: Hello endpoint
+      responses:
+        '200':
+          description: Greeting message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
