@@ -45,6 +45,14 @@
         "reportsDirectory": "../../coverage/apps/frontend"
       }
     },
+    "coverage": {
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/coverage/apps/frontend"],
+      "options": {
+        "command": "pnpm exec vitest run --config apps/frontend/vite.config.ts --coverage",
+        "cwd": "{workspaceRoot}"
+      }
+    },
     "lint": {
       "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"],

@@ -26,6 +26,14 @@
         "cwd": "apps/api-java"
       }
     },
+    "coverage": {
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/apps/api-java/target/site/jacoco"],
+      "options": {
+        "command": "mvn verify",
+        "cwd": "apps/api-java"
+      }
+    },
     "lint": {
       "executor": "nx:run-commands",
       "options": {

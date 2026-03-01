@@ -26,6 +26,14 @@
         "cwd": "apps/api-go"
       }
     },
+    "coverage": {
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/coverage/apps/api-go"],
+      "options": {
+        "command": "bash scripts/check-coverage.sh",
+        "cwd": "apps/api-go"
+      }
+    },
     "lint": {
       "executor": "nx:run-commands",
       "options": {

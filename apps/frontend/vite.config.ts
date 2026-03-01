@@ -32,6 +32,14 @@ export default defineConfig({
     coverage: {
       reportsDirectory: '../../coverage/apps/frontend',
       provider: 'v8',
+      include: ['src/**/*.{ts,tsx}'],
+      exclude: ['src/main.tsx'],
+      thresholds: {
+        lines: 75,
+        functions: 75,
+        statements: 75,
+        branches: 60,
+      },
     },
   },
 });

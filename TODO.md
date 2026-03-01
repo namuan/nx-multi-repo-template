@@ -56,7 +56,7 @@ Items required before this template is suitable for production workloads.
 - [ ] **Add E2E tests** — set up Playwright targeting the `docker-compose` stack; add an `e2e` Nx project and a CI step
 - [x] **Add Go integration tests** — expanded handler and middleware coverage in `main_test.go`
 - [x] **Add Spring Boot integration tests** — added `HelloEndpointIntegrationTest` with `@SpringBootTest`
-- [ ] **Enforce coverage thresholds** — configure minimum coverage in `vite.config.ts` (Vitest), `go test -cover`, and Maven JaCoCo checks; fail CI if thresholds are not met
+- [x] **Enforce coverage thresholds** — added frontend Vitest thresholds, Go coverage gate script, and Maven JaCoCo checks; CI now fails when thresholds are not met
 
 ---
 
