@@ -6,14 +6,14 @@ Everything runs through `npm run <command>`. You never need to call `docker`, `p
 
 ## Prerequisites
 
-| Tool | Version | Install |
-|------|---------|---------|
-| Node.js | 22 LTS | [nodejs.org](https://nodejs.org) |
-| Go | 1.23+ | [go.dev/dl](https://go.dev/dl) |
-| Java JDK | **21+** (required) | [adoptium.net](https://adoptium.net) or `sdk install java 21-tem` via [SDKMAN](https://sdkman.io) |
-| Docker Desktop | Latest | [docker.com](https://www.docker.com/products/docker-desktop) |
-| pnpm | 10+ | `npm install -g pnpm@10` |
-| tmux | 3.2+ | `brew install tmux` (optional, for Option B) |
+| Tool           | Version            | Install                                                                                           |
+|----------------|--------------------|---------------------------------------------------------------------------------------------------|
+| Node.js        | 22 LTS             | [nodejs.org](https://nodejs.org)                                                                  |
+| Go             | 1.23+              | [go.dev/dl](https://go.dev/dl)                                                                    |
+| Java JDK       | **21+** (required) | [adoptium.net](https://adoptium.net) or `sdk install java 21-tem` via [SDKMAN](https://sdkman.io) |
+| Docker Desktop | Latest             | [docker.com](https://www.docker.com/products/docker-desktop)                                      |
+| pnpm           | 10+                | `npm install -g pnpm@10`                                                                          |
+| tmux           | 3.2+               | `brew install tmux` (optional, for Option B)                                                      |
 
 Run `npm run check` at any time to verify your environment.
 
@@ -29,7 +29,8 @@ The fastest path. Every service runs in a container; no local runtimes needed be
 npm run setup
 ```
 
-Verifies prerequisites, installs Node deps, and generates `pnpm-lock.yaml`. Required once after cloning, and again after `package.json` changes.
+Verifies prerequisites, installs Node deps, and generates `pnpm-lock.yaml`. Required once after cloning, and again after
+`package.json` changes.
 
 **2. Copy environment variables**
 
@@ -45,12 +46,12 @@ npm run dev:up
 
 Builds all images and starts PostgreSQL, the Go API, the Java API, and the React frontend.
 
-| Service | URL |
-|---------|-----|
-| Frontend | http://localhost:9100 |
-| Go API | http://localhost:9101 |
-| Java API | http://localhost:9102 |
-| PostgreSQL | localhost:5432 |
+| Service    | URL                   |
+|------------|-----------------------|
+| Frontend   | http://localhost:9100 |
+| Go API     | http://localhost:9101 |
+| Java API   | http://localhost:9102 |
+| PostgreSQL | localhost:5432        |
 
 **4. (Optional) Start with the device simulator**
 
@@ -58,7 +59,8 @@ Builds all images and starts PostgreSQL, the Go API, the Java API, and the React
 npm run dev:up:demo
 ```
 
-Adds a simulator container that sends live GPS telemetry for all 8 demo devices, so the map moves in real time without any manual steps.
+Adds a simulator container that sends live GPS telemetry for all 8 demo devices, so the map moves in real time without
+any manual steps.
 
 **5. Stop everything**
 
@@ -72,7 +74,8 @@ Stops all containers and kills the tmux session (if one is running).
 
 ## Option B — tmux (recommended for active development)
 
-One command opens two tmux windows: the first streams unified logs, and the second runs all app panes (database, Go API, Java API, frontend, simulator).
+One command opens two tmux windows: the first streams unified logs, and the second runs all app panes (database, Go API,
+Java API, frontend, simulator).
 
 **1. Copy environment variables (first time only)**
 
@@ -106,13 +109,13 @@ window 2: dev
 
 **Useful tmux keys**
 
-| Key | Action |
-|-----|--------|
-| `Ctrl-b 1` / `Ctrl-b 2` | Switch between logs and dev windows |
-| `Ctrl-b ←↑→↓` | Move between panes |
-| `Ctrl-b z` | Zoom the focused pane to full screen (again to unzoom) |
-| `Ctrl-b d` | Detach (session keeps running in background) |
-| `tmux attach -t fleet-dev` | Reattach after detaching |
+| Key                        | Action                                                 |
+|----------------------------|--------------------------------------------------------|
+| `Ctrl-b 1` / `Ctrl-b 2`    | Switch between logs and dev windows                    |
+| `Ctrl-b ←↑→↓`              | Move between panes                                     |
+| `Ctrl-b z`                 | Zoom the focused pane to full screen (again to unzoom) |
+| `Ctrl-b d`                 | Detach (session keeps running in background)           |
+| `tmux attach -t fleet-dev` | Reattach after detaching                               |
 
 **Tear down**
 
@@ -134,7 +137,8 @@ Same as Option B but without tmux — useful if you prefer separate terminal tab
 npm run setup
 ```
 
-Verifies prerequisites, installs Node dependencies, downloads Go module dependencies, and syncs the Go workspace. Run once after cloning, and again after changes to `package.json` or `go.mod`.
+Verifies prerequisites, installs Node dependencies, downloads Go module dependencies, and syncs the Go workspace. Run
+once after cloning, and again after changes to `package.json` or `go.mod`.
 
 ### Step 2 — Start the database
 
@@ -171,7 +175,8 @@ npm run dev:all
 npm run dev:simulate
 ```
 
-Sends telemetry for all 8 demo devices to the local Go API. Keep it running in a separate tab to see the map update live.
+Sends telemetry for all 8 demo devices to the local Go API. Keep it running in a separate tab to see the map update
+live.
 
 ---
 
@@ -185,14 +190,14 @@ cp .env.example .env
 
 The defaults work out of the box for both Docker and local-process setups. Key variables:
 
-| Variable | Default | Used by |
-|----------|---------|---------|
-| `VITE_API_GO_URL` | `http://localhost:9101` | Frontend → Go API |
-| `VITE_API_JAVA_URL` | `http://localhost:9102` | Frontend → Java API |
-| `DATABASE_URL` | `postgres://fleet_user:fleet_password@localhost:5432/fleet_db` | Go API |
-| `SPRING_DATASOURCE_URL` | `jdbc:postgresql://localhost:5432/fleet_db` | Java API |
-| `JWT_SECRET` | `fleet-super-secret-jwt-key-…` | Both APIs (must match) |
-| `INTERVAL_MS` | `3000` | Simulator (ms between telemetry events per device) |
+| Variable                | Default                                                        | Used by                                            |
+|-------------------------|----------------------------------------------------------------|----------------------------------------------------|
+| `VITE_API_GO_URL`       | `http://localhost:9101`                                        | Frontend → Go API                                  |
+| `VITE_API_JAVA_URL`     | `http://localhost:9102`                                        | Frontend → Java API                                |
+| `DATABASE_URL`          | `postgres://fleet_user:fleet_password@localhost:5432/fleet_db` | Go API                                             |
+| `SPRING_DATASOURCE_URL` | `jdbc:postgresql://localhost:5432/fleet_db`                    | Java API                                           |
+| `JWT_SECRET`            | `fleet-super-secret-jwt-key-…`                                 | Both APIs (must match)                             |
+| `INTERVAL_MS`           | `3000`                                                         | Simulator (ms between telemetry events per device) |
 
 > **Production note** — change `JWT_SECRET` to a random 64-character string before deploying.
 
@@ -202,13 +207,13 @@ The defaults work out of the box for both Docker and local-process setups. Key v
 
 All passwords are case-sensitive.
 
-| Role | Email | Password | Access |
-|------|-------|----------|--------|
-| Platform admin | `admin@fleetpilot.io` | `Admin123!` | All tenants, admin portal |
-| Fleet admin (Acme) | `alice@acme.com` | `Demo123!` | Acme Logistics fleet |
-| Dispatcher (Acme) | `bob@acme.com` | `Demo123!` | Acme Logistics (limited) |
-| Fleet admin (SwiftFleet) | `diana@swiftfleet.io` | `Demo123!` | SwiftFleet fleet |
-| Fleet admin (Urban) | `frank@urbandel.co` | `Demo123!` | Urban Delivery Co fleet |
+| Role                     | Email                 | Password    | Access                    |
+|--------------------------|-----------------------|-------------|---------------------------|
+| Platform admin           | `admin@fleetpilot.io` | `Admin123!` | All tenants, admin portal |
+| Fleet admin (Acme)       | `alice@acme.com`      | `Demo123!`  | Acme Logistics fleet      |
+| Dispatcher (Acme)        | `bob@acme.com`        | `Demo123!`  | Acme Logistics (limited)  |
+| Fleet admin (SwiftFleet) | `diana@swiftfleet.io` | `Demo123!`  | SwiftFleet fleet          |
+| Fleet admin (Urban)      | `frank@urbandel.co`   | `Demo123!`  | Urban Delivery Co fleet   |
 
 Each tenant's fleet is fully isolated — logging in as `alice@acme.com` shows only Acme's devices and alerts.
 
@@ -218,61 +223,61 @@ Each tenant's fleet is fully isolated — logging in as `alice@acme.com` shows o
 
 ### Setup & validation
 
-| Command | What it does |
-|---------|-------------|
-| `npm run check` | Verify all prerequisites are installed at the correct version |
-| `npm run setup` | Run `check`, install Node deps, tidy Go modules, sync Go workspace |
-| `npm run go:tidy` | Run `go mod tidy` in `apps/api-go` |
-| `npm run go:sync` | Run `go work sync` at the workspace root |
+| Command           | What it does                                                       |
+|-------------------|--------------------------------------------------------------------|
+| `npm run check`   | Verify all prerequisites are installed at the correct version      |
+| `npm run setup`   | Run `check`, install Node deps, tidy Go modules, sync Go workspace |
+| `npm run go:tidy` | Run `go mod tidy` in `apps/api-go`                                 |
+| `npm run go:sync` | Run `go work sync` at the workspace root                           |
 
 ### Docker (full stack)
 
-| Command | What it does |
-|---------|-------------|
-| `npm run dev:up` | Build images and start all services (foreground) |
-| `npm run dev:up:demo` | Same, plus the device simulator |
-| `npm run dev:up:detached` | Same as `dev:up` but runs in background |
-| `npm run dev:down` | Stop containers and kill the tmux session |
-| `npm run dev:docker:build` | Build images without starting containers |
+| Command                    | What it does                                     |
+|----------------------------|--------------------------------------------------|
+| `npm run dev:up`           | Build images and start all services (foreground) |
+| `npm run dev:up:demo`      | Same, plus the device simulator                  |
+| `npm run dev:up:detached`  | Same as `dev:up` but runs in background          |
+| `npm run dev:down`         | Stop containers and kill the tmux session        |
+| `npm run dev:docker:build` | Build images without starting containers         |
 
 ### Database
 
-| Command | What it does |
-|---------|-------------|
-| `npm run dev:db:up` | Start PostgreSQL and wait until healthy |
-| `npm run dev:db:down` | Stop PostgreSQL (data preserved) |
+| Command                | What it does                                |
+|------------------------|---------------------------------------------|
+| `npm run dev:db:up`    | Start PostgreSQL and wait until healthy     |
+| `npm run dev:db:down`  | Stop PostgreSQL (data preserved)            |
 | `npm run dev:db:reset` | Destroy all data and re-run the seed script |
-| `npm run dev:db:logs` | Tail PostgreSQL logs |
+| `npm run dev:db:logs`  | Tail PostgreSQL logs                        |
 
 ### Local development
 
-| Command | What it does |
-|---------|-------------|
-| `npm run dev:tmux` | **One command** — opens a tmux session with all services in split panes |
-| `npm run dev:frontend` | Start Vite dev server (port 9100, hot reload) |
-| `npm run dev:go` | Start Go API (port 9101) |
-| `npm run dev:java` | Start Spring Boot (port 9102) |
-| `npm run dev:all` | Start all three services in parallel (no tmux) |
-| `npm run dev:simulate` | Run the GPS device simulator against the local Go API |
+| Command                | What it does                                                            |
+|------------------------|-------------------------------------------------------------------------|
+| `npm run dev:tmux`     | **One command** — opens a tmux session with all services in split panes |
+| `npm run dev:frontend` | Start Vite dev server (port 9100, hot reload)                           |
+| `npm run dev:go`       | Start Go API (port 9101)                                                |
+| `npm run dev:java`     | Start Spring Boot (port 9102)                                           |
+| `npm run dev:all`      | Start all three services in parallel (no tmux)                          |
+| `npm run dev:simulate` | Run the GPS device simulator against the local Go API                   |
 
 ### Logs (Docker mode)
 
-| Command | What it does |
-|---------|-------------|
-| `npm run dev:logs:go` | Tail Go API logs |
-| `npm run dev:logs:java` | Tail Java API logs |
-| `npm run dev:logs:frontend` | Tail nginx logs |
-| `npm run dev:logs:all` | Single stream of all app logs (tmux aggregate, or docker fallback) |
+| Command                     | What it does                                                       |
+|-----------------------------|--------------------------------------------------------------------|
+| `npm run dev:logs:go`       | Tail Go API logs                                                   |
+| `npm run dev:logs:java`     | Tail Java API logs                                                 |
+| `npm run dev:logs:frontend` | Tail nginx logs                                                    |
+| `npm run dev:logs:all`      | Single stream of all app logs (tmux aggregate, or docker fallback) |
 
 ### Quality
 
-| Command | What it does |
-|---------|-------------|
+| Command                    | What it does                                                                                |
+|----------------------------|---------------------------------------------------------------------------------------------|
 | `npm run test:e2e:backend` | Runs Playwright backend API E2E (`apps/api-e2e`) against db + api-go + api-java + simulator |
-| `npm run lint` | Lint all projects (Nx affected) |
-| `npm run test` | Run all test suites |
-| `npm run build` | Production build for all projects |
-| `npm run format` | Auto-format all files with Prettier |
+| `npm run lint`             | Lint all projects (Nx affected)                                                             |
+| `npm run test`             | Run all test suites                                                                         |
+| `npm run build`            | Production build for all projects                                                           |
+| `npm run format`           | Auto-format all files with Prettier                                                         |
 
 ---
 
@@ -353,7 +358,8 @@ If it crashed, restart it from that pane with:
 npm run dev:simulate
 ```
 
-Local simulator runs now include startup fast-forward by default (`FAST_FORWARD_EVENTS=40`, `FAST_FORWARD_STEP_MS=15000` when targeting localhost). Reduce or disable via `.env` if needed.
+Local simulator runs now include startup fast-forward by default (`FAST_FORWARD_EVENTS=40`, `FAST_FORWARD_STEP_MS=15000`
+when targeting localhost). Reduce or disable via `.env` if needed.
 
 Or start the full stack with the demo profile:
 
@@ -383,7 +389,8 @@ brew install --cask temurin@21
 export JAVA_HOME=$(/usr/libexec/java_home -v 21)
 ```
 
-Add the `JAVA_HOME` export to your shell profile (`~/.zshrc` or `~/.bashrc`) to make it permanent. The Docker build is not affected — it always uses `eclipse-temurin:21`.
+Add the `JAVA_HOME` export to your shell profile (`~/.zshrc` or `~/.bashrc`) to make it permanent. The Docker build is
+not affected — it always uses `eclipse-temurin:21`.
 
 **Frontend shows auth errors**
 
