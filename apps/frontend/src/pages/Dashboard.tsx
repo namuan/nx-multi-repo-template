@@ -7,13 +7,13 @@ import { fleetWs, type TelemetryMessage } from '../lib/ws';
 import { formatDistanceToNow } from 'date-fns';
 
 export default function Dashboard() {
-  const { data: deviceList = [] } = useQuery({
+  const { data: deviceList = [], error: devicesError } = useQuery({
     queryKey: ['devices'],
     queryFn: () => deviceApi.list().then(r => r.data),
     refetchInterval: 60_000,
   });
 
-  const { data: unackedAlerts = [] } = useQuery({
+  const { data: unackedAlerts = [], error: alertsError } = useQuery({
     queryKey: ['alerts-unacked'],
     queryFn: () => alerts.unacknowledged().then(r => r.data),
     refetchInterval: 30_000,
@@ -42,9 +42,19 @@ export default function Dashboard() {
 
   const online  = mergedDevices.filter(d => d.status === 'online').length;
   const offline = mergedDevices.filter(d => d.status === 'offline').length;
+  const loadError = devicesError ?? alertsError;
 
   return (
     <Layout title="Dashboard">
+      {loadError && (
+        <div className="card" style={{ marginBottom: 16, borderLeft: '4px solid var(--danger)' }}>
+          <div style={{ fontWeight: 600, marginBottom: 4 }}>Unable to load dashboard data</div>
+          <div style={{ color: 'var(--text-muted)', fontSize: 13 }}>
+            Ensure `api-java` can connect to Postgres (run `npm run dev:db:up`) and refresh.
+          </div>
+        </div>
+      )}
+
       <div className="stat-grid">
         <div className="stat-card">
           <div className="stat-icon" style={{ background: 'rgba(59,130,246,0.15)' }}>

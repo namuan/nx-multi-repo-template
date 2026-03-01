@@ -3,10 +3,10 @@ package com.example.fleet.controller;
 import com.example.fleet.domain.entity.Alert;
 import com.example.fleet.domain.entity.AlertRule;
 import com.example.fleet.dto.request.CreateAlertRuleRequest;
+import com.example.fleet.dto.response.PageResponse;
 import com.example.fleet.security.TenantContext;
 import com.example.fleet.service.AlertService;
 import jakarta.validation.Valid;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,11 +27,11 @@ public class AlertController {
     // ── Alerts ────────────────────────────────────────────────────────────────
 
     @GetMapping("/alerts")
-    public ResponseEntity<Page<Alert>> listAlerts(
+    public ResponseEntity<PageResponse<Alert>> listAlerts(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
-        return ResponseEntity.ok(
-                alertService.getAlerts(currentTenantId(), PageRequest.of(page, size)));
+        return ResponseEntity.ok(PageResponse.from(
+                alertService.getAlerts(currentTenantId(), PageRequest.of(page, size))));
     }
 
     @GetMapping("/alerts/unacknowledged")

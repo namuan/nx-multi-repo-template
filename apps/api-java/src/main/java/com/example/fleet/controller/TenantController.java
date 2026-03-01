@@ -2,11 +2,11 @@ package com.example.fleet.controller;
 
 import com.example.fleet.domain.entity.Tenant;
 import com.example.fleet.domain.entity.User;
+import com.example.fleet.dto.response.PageResponse;
 import com.example.fleet.repository.UserRepository;
 import com.example.fleet.security.TenantContext;
 import com.example.fleet.service.AuditLogService;
 import com.example.fleet.service.TenantService;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -54,21 +54,21 @@ public class TenantController {
     }
 
     @GetMapping("/audit-logs")
-    public ResponseEntity<?> auditLogs(
+    public ResponseEntity<PageResponse<?>> auditLogs(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "50") int size) {
-        return ResponseEntity.ok(
-                auditLog.getAuditLogs(TenantContext.get().tenantId(), PageRequest.of(page, size)));
+        return ResponseEntity.ok(PageResponse.from(
+                auditLog.getAuditLogs(TenantContext.get().tenantId(), PageRequest.of(page, size))));
     }
 
     // ── Platform Admin endpoints ──────────────────────────────────────────────
 
     @GetMapping("/admin/tenants")
-    public ResponseEntity<Page<Tenant>> listTenants(
+    public ResponseEntity<PageResponse<Tenant>> listTenants(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
         requirePlatformAdmin();
-        return ResponseEntity.ok(tenantService.listAllTenants(PageRequest.of(page, size)));
+        return ResponseEntity.ok(PageResponse.from(tenantService.listAllTenants(PageRequest.of(page, size))));
     }
 
     @PostMapping("/admin/tenants/{id}/suspend")
