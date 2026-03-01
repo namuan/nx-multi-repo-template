@@ -54,6 +54,7 @@ services:
       SPRING_DATASOURCE_PASSWORD: "fleet_password"
       JWT_SECRET: "fleet-super-secret-jwt-key-change-in-production"
       JWT_EXPIRATION_MS: "86400000"
+      ALLOWED_ORIGIN: "http://localhost:9100"
     depends_on:
       db:
         condition: service_healthy
