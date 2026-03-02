@@ -39,8 +39,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                     UUID userId = UUID.fromString(claims.getSubject());
                     UUID tenantId = UUID.fromString(claims.get("tenant_id", String.class));
                     String role = claims.get("role", String.class);
-                    Boolean isPlatformAdmin = claims.get("is_platform_admin", Boolean.class);
-                    if (isPlatformAdmin == null) isPlatformAdmin = false;
+                    boolean isPlatformAdmin =
+                            Boolean.TRUE.equals(claims.get("is_platform_admin", Boolean.class));
 
                     TenantContext.set(userId, tenantId, role, isPlatformAdmin);
 

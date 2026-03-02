@@ -6,6 +6,7 @@ import com.example.fleet.dto.request.CreateDeviceRequest;
 import com.example.fleet.repository.TelemetryEventRepository;
 import com.example.fleet.security.TenantContext;
 import com.example.fleet.service.DeviceService;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
@@ -14,6 +15,9 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/devices")
+@SuppressFBWarnings(
+        value = "EI_EXPOSE_REP2",
+        justification = "Repository and service dependencies are Spring-managed beans.")
 public class DeviceController {
 
     private final DeviceService deviceService;

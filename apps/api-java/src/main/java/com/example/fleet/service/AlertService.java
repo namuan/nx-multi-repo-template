@@ -51,7 +51,7 @@ public class AlertService {
                                         new ResponseStatusException(
                                                 HttpStatus.NOT_FOUND, "Alert not found"));
 
-        if (alert.getAcknowledged()) {
+        if (alert.isAcknowledged()) {
             return alert;
         }
 

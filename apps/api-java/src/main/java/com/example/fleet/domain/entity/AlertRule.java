@@ -3,13 +3,15 @@ package com.example.fleet.domain.entity;
 import jakarta.persistence.*;
 import java.time.Instant;
 import java.util.UUID;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Table(name = "alert_rules")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class AlertRule {
 
@@ -32,7 +34,7 @@ public class AlertRule {
     private String severity = "warning";
 
     @Column(nullable = false)
-    private Boolean active = true;
+    private boolean active = true;
 
     @CreationTimestamp private Instant createdAt;
 }

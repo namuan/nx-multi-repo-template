@@ -1,6 +1,7 @@
 package com.example.fleet.config;
 
 import com.example.fleet.security.JwtAuthFilter;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -15,6 +16,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@SuppressFBWarnings(
+        value = {"EI_EXPOSE_REP2", "SPRING_CSRF_PROTECTION_DISABLED"},
+        justification =
+                "Dependencies are Spring-managed singletons and CSRF is intentionally disabled for stateless JWT API endpoints.")
 public class SecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;

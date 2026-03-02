@@ -1,9 +1,11 @@
 package com.example.fleet.service;
 
 import com.example.fleet.domain.entity.Device;
+import com.example.fleet.domain.entity.Tenant;
 import com.example.fleet.dto.request.CreateDeviceRequest;
 import com.example.fleet.repository.DeviceRepository;
 import com.example.fleet.repository.TenantRepository;
+import java.security.SecureRandom;
 import java.util.HexFormat;
 import java.util.List;
 import java.util.UUID;
@@ -13,6 +15,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class DeviceService {
+
+    private static final SecureRandom API_KEY_RANDOM = new SecureRandom();
 
     private final DeviceRepository deviceRepo;
     private final TenantRepository tenantRepo;
@@ -41,7 +45,7 @@ public class DeviceService {
     public Device createDevice(
             UUID tenantId, CreateDeviceRequest req, UUID actorId, String actorEmail) {
         long count = deviceRepo.countByTenantId(tenantId);
-        int maxDevices = tenantRepo.findById(tenantId).map(t -> t.getMaxDevices()).orElse(10);
+        int maxDevices = tenantRepo.findById(tenantId).map(Tenant::getMaxDevices).orElse(10);
 
         if (count >= maxDevices) {
             throw new ResponseStatusException(
@@ -118,7 +122,7 @@ public class DeviceService {
 
     private String generateApiKey() {
         byte[] bytes = new byte[32];
-        new java.security.SecureRandom().nextBytes(bytes);
+        API_KEY_RANDOM.nextBytes(bytes);
         return HexFormat.of().formatHex(bytes);
     }
 

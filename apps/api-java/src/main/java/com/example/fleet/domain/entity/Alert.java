@@ -3,13 +3,15 @@ package com.example.fleet.domain.entity;
 import jakarta.persistence.*;
 import java.time.Instant;
 import java.util.UUID;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Table(name = "alerts")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class Alert {
 
@@ -35,7 +37,7 @@ public class Alert {
     private String severity;
 
     @Column(nullable = false)
-    private Boolean acknowledged = false;
+    private boolean acknowledged;
 
     private UUID acknowledgedBy;
     private Instant acknowledgedAt;

@@ -4,15 +4,17 @@ import jakarta.persistence.*;
 import java.time.Instant;
 import java.util.Map;
 import java.util.UUID;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(name = "telemetry_events")
 @IdClass(TelemetryEventId.class)
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class TelemetryEvent {
 

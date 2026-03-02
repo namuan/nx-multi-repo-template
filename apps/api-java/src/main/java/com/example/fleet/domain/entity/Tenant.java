@@ -3,14 +3,16 @@ package com.example.fleet.domain.entity;
 import jakarta.persistence.*;
 import java.time.Instant;
 import java.util.UUID;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Table(name = "tenants")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class Tenant {
 

@@ -6,6 +6,7 @@ import com.example.fleet.dto.request.CreateAlertRuleRequest;
 import com.example.fleet.dto.response.PageResponse;
 import com.example.fleet.security.TenantContext;
 import com.example.fleet.service.AlertService;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
@@ -15,6 +16,10 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
+@SuppressFBWarnings(
+        value = "EI_EXPOSE_REP2",
+        justification =
+                "Service dependency is managed by Spring and not mutated by this controller.")
 public class AlertController {
 
     private final AlertService alertService;

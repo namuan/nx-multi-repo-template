@@ -2,6 +2,7 @@ package com.example.fleet.exception;
 
 import java.time.Instant;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +24,9 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ValidationErrorResponse> handleValidation(
             MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-        for (FieldError fe : ex.getBindingResult().getFieldErrors()) {
+        List<FieldError> fieldErrors = ex.getBindingResult().getFieldErrors();
+        Map<String, String> errors = new HashMap<>(fieldErrors.size());
+        for (FieldError fe : fieldErrors) {
             errors.put(fe.getField(), fe.getDefaultMessage());
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -40,5 +42,9 @@ public class GlobalExceptionHandler {
     public record ErrorResponse(int status, String message, Instant timestamp) {}
 
     public record ValidationErrorResponse(
-            int status, String message, Map<String, String> errors, Instant timestamp) {}
+            int status, String message, Map<String, String> errors, Instant timestamp) {
+        public ValidationErrorResponse {
+            errors = Map.copyOf(errors);
+        }
+    }
 }
