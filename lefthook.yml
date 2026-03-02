@@ -19,3 +19,10 @@ pre-commit:
     java-compile:
       glob: "apps/api-java/**/*.java"
       run: mvn -f apps/api-java/pom.xml -q -DskipTests compile
+
+pre-push:
+  commands:
+    nx-affected-tests:
+      run: >-
+        BASE="$(git merge-base HEAD origin/main 2>/dev/null || git rev-parse HEAD~1 2>/dev/null || git rev-parse HEAD)";
+        pnpm nx affected -t test --base="$BASE" --head=HEAD --parallel=3
