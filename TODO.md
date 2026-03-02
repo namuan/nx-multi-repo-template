@@ -31,7 +31,7 @@ This file tracks active, not-yet-completed work only. Completed items are remove
 
 ## Testing and Quality
 
-- [ ] **Increase frontend test coverage** — expand component and state-management tests beyond baseline smoke tests
+- [x] **Increase frontend test coverage** — 181 tests across 14 files; coverage: 92% lines, 91% stmts, 88% funcs, 81% branches (all thresholds met)
 - [ ] **Add contract checks between Java and Go APIs** — detect payload/behavior drift across services
 
 ---
