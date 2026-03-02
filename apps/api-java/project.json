@@ -43,10 +43,51 @@
         "cwd": "apps/api-java"
       }
     },
+    "mvn-process-sources": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "mvn process-sources",
+        "cwd": "apps/api-java"
+      }
+    },
+    "mvn-compile": {
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/apps/api-java/target/classes"],
+      "options": {
+        "command": "mvn compile",
+        "cwd": "apps/api-java"
+      }
+    },
+    "mvn-test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "mvn test",
+        "cwd": "apps/api-java",
+        "env": {
+          "SPRING_DATASOURCE_URL": "jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH",
+          "SPRING_DATASOURCE_USERNAME": "sa",
+          "SPRING_DATASOURCE_PASSWORD": "",
+          "SPRING_DATASOURCE_DRIVER_CLASS_NAME": "org.h2.Driver"
+        }
+      }
+    },
+    "mvn-verify": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "mvn verify",
+        "cwd": "apps/api-java",
+        "env": {
+          "SPRING_DATASOURCE_URL": "jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH",
+          "SPRING_DATASOURCE_USERNAME": "sa",
+          "SPRING_DATASOURCE_PASSWORD": "",
+          "SPRING_DATASOURCE_DRIVER_CLASS_NAME": "org.h2.Driver"
+        }
+      }
+    },
     "lint": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "mvn checkstyle:check",
+        "command": "mvn -DskipTests spotless:check checkstyle:check pmd:check pmd:cpd-check spotbugs:check",
         "cwd": "apps/api-java"
       }
     },

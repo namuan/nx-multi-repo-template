@@ -4,6 +4,13 @@
     {
       "plugin": "@nx/react",
       "options": {}
+    },
+    {
+      "plugin": "@nx/maven",
+      "options": {
+        "targetNamePrefix": "mvn-",
+        "verbose": false
+      }
     }
   ],
   "targetDefaults": {
@@ -23,6 +30,14 @@
     },
     "helm:package": {
       "cache": true
+    },
+    "mvn-compile": {
+      "inputs": ["{projectRoot}/src/**/*"],
+      "outputs": ["{projectRoot}/target/classes"]
+    },
+    "mvn-verify": {
+      "dependsOn": ["mvn-compile", "mvn-test"],
+      "inputs": ["{projectRoot}/src/**/*", "{projectRoot}/pom.xml"]
     }
   },
   "namedInputs": {
