@@ -16,6 +16,7 @@ Current backend E2E scope focuses on:
 
 - Java dashboard APIs (`/api/devices`, `/api/devices/stats`, `/api/alerts/*`)
 - Go API health (`/health`)
+- Observability checks (Prometheus scrape + Grafana dashboard provisioning)
 
 UI rendering is intentionally excluded.
 
@@ -40,11 +41,15 @@ Defined in `apps/api-e2e/docker-compose.e2e.yml`:
 - `db` (Postgres 16)
 - `api-go`
 - `api-java`
+- `prometheus`
+- `grafana`
 
 Ports exposed to host:
 
 - Go API: `19101`
 - Java API: `19102`
+- Prometheus: `19190`
+- Grafana: `19300`
 
 ### 3) Database Bootstrap
 
@@ -95,6 +100,8 @@ E2E endpoints use dedicated variables:
 
 - `E2E_GO_API_URL` (default `http://127.0.0.1:19101`)
 - `E2E_JAVA_API_URL` (default `http://127.0.0.1:19102`)
+- `E2E_PROMETHEUS_URL` (default `http://127.0.0.1:19190`)
+- `E2E_GRAFANA_URL` (default `http://127.0.0.1:19300`)
 
 Reason:
 
