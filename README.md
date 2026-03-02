@@ -54,6 +54,11 @@ cp .env.example .env
 # Start full local stack (db + APIs + frontend)
 npm run dev:up
 
+# Start full stack with an explicit environment profile
+npm run dev:up:dev
+npm run dev:up:qa
+npm run dev:up:prod
+
 # Start local stack with Prometheus + Grafana
 npm run dev:up:obs
 
@@ -63,6 +68,8 @@ npm run test:e2e:frontend
 ```
 
 For full local workflows (Docker, tmux, local processes, troubleshooting), see `LOCAL_DEV.md`.
+
+Environment profile files are stored in `config/env` and can be customized per target (`dev.env`, `qa.env`, `prod.env`).
 
 ## Common Commands
 

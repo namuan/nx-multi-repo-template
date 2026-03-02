@@ -48,6 +48,22 @@ npm run dev:up
 
 Builds all images and starts PostgreSQL, the Go API, the Java API, and the React frontend.
 
+**3a. Start with an explicit environment profile (DEV / QA / PROD)**
+
+```sh
+npm run dev:up:dev
+npm run dev:up:qa
+npm run dev:up:prod
+```
+
+These commands run the exact same full polyglot stack, but load profile-specific environment values from:
+
+- `config/env/dev.env`
+- `config/env/qa.env`
+- `config/env/prod.env`
+
+Use this when you want to test different config sets (for example JWT settings or origin rules) without editing `.env`.
+
 | Service    | URL                   |
 |------------|-----------------------|
 | Frontend   | http://localhost:9100 |
@@ -250,6 +266,9 @@ Each tenant's fleet is fully isolated — logging in as `alice@acme.com` shows o
 | Command                    | What it does                                     |
 |----------------------------|--------------------------------------------------|
 | `npm run dev:up`           | Build images and start all services (foreground) |
+| `npm run dev:up:dev`       | Build and start full stack using `config/env/dev.env` |
+| `npm run dev:up:qa`        | Build and start full stack using `config/env/qa.env` |
+| `npm run dev:up:prod`      | Build and start full stack using `config/env/prod.env` |
 | `npm run dev:up:demo`      | Same, plus the device simulator                  |
 | `npm run dev:up:obs`       | Same as `dev:up`, plus Prometheus and Grafana    |
 | `npm run dev:up:demo:obs`  | Same as `dev:up:demo`, plus Prometheus and Grafana |
