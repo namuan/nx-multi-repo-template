@@ -53,6 +53,13 @@
     "test:e2e:frontend:ci": "nx run frontend-e2e:e2e --configuration=ci",
     "dev:tmux": "npm run check -- --tmux && tools/tmux/fleet-dev.sh"
   },
+  "pnpm": {
+    "overrides": {
+      "minimatch@>=10.0.0 <10.2.3": "10.2.4",
+      "koa@>=3.0.0 <3.1.2": "3.1.2",
+      "serialize-javascript@<=7.0.2": "7.0.3"
+    }
+  },
   "devDependencies": {
     "@nx-tools/nx-container": "7.2.1",
     "@nx/eslint": "22.5.3",

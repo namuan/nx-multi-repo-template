@@ -4,7 +4,8 @@
       "Bash(chmod +x:*)",
       "Bash(docker compose:*)",
       "Bash(pnpm:*)",
-      "Bash(docker exec:*)"
+      "Bash(docker exec:*)",
+      "Bash(pnpm info:*)"
     ]
   }
 }
