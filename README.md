@@ -1,12 +1,39 @@
-# Nx Polyglot Monorepo
+# FleetStream
 
-**Nx + React (Vite + TS) + Go + Java (Spring Boot + Maven)**
+Multi-tenant fleet visibility with alerts and real-time dashboards
 
-A production-ready polyglot monorepo with shared Postgres, migration-first database bootstrap, Docker/Helm deployment paths, and Nx orchestration across stacks.
+![](docs/assets/intro.png)
+
+## Product Overview
+
+This repository implements a multi-tenant fleet operations platform. It ingests live telemetry from devices, streams real-time updates to operators, and provides tenant-scoped APIs and UI workflows for authentication, fleet management, alerts, and dashboard analytics.
+
+## Product Feature Set
+
+- Multi-tenant tenant onboarding and user authentication (register and login flows).
+- Tenant profile and administration flows, including tenant status management.
+- Device fleet management with CRUD operations for vehicle/device records.
+- Device telemetry ingestion API with device key authentication (`X-Device-Key`).
+- Tenant-scoped real-time telemetry streaming over WebSocket.
+- Telemetry persistence with latest device position/last-seen updates.
+- Alert rule management and automatic alert generation from telemetry conditions.
+- Alert monitoring endpoints, unacknowledged counts, and acknowledgement workflows.
+- Dashboard-oriented REST endpoints for fleet statistics and telemetry history.
+- Tenant audit log retrieval for operational visibility.
+
+## Platform and Engineering Capabilities
+
+- Shared PostgreSQL schema with migration-first lifecycle and optional demo seeding.
+- End-to-end API and frontend test coverage using isolated, reproducible E2E stacks.
+- Local simulator support for generating telemetry traffic during development.
+
+## Technical Overview
+
+This project is organized as an Nx-based polyglot monorepo with a React frontend, Go ingestion/streaming service, Java business-domain API, shared PostgreSQL schema, and Docker/Helm deployment paths.
 
 `apps/api-java` requires JDK 21.
 
-## Stack
+## Technology Stack
 
 | App | Technology |
 |-----|-----------|
@@ -53,7 +80,7 @@ npm run db:seed
 ## Documentation Map
 
 - Local development: `LOCAL_DEV.md`
-- Contribution workflow: `CONTRIBUTING.md`
+- Contribution workflow: `.github/pull_request_template.md` and `lefthook.yml`
 - Operational runbook (deploy/rollback/debug): `docs/runbook.md`
 - System architecture: `docs/polyglot-architecture.md`
 - Feature routing guide (Go vs Java): `docs/polyglot-architecture.md#feature-routing-guide-go-vs-java`
