@@ -18,7 +18,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0   # needed for nx affected
+          fetch-depth: 0 # needed for nx affected
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -34,7 +34,7 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
-          go-version: '1.23'
+          go-version: '1.25.7'
           cache: true
 
       - name: Setup Java

@@ -1,4 +1,4 @@
-FROM golang:1.23-alpine AS builder
+FROM golang:1.25.7-alpine AS builder
 WORKDIR /app
 COPY tools/simulator/main.go .
 RUN go mod init simulator && go build -o simulator .

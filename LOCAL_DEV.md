@@ -11,7 +11,7 @@ For cluster deploy/rollback/debug operations, see `docs/runbook.md`.
 | Tool           | Version            | Install                                                                                           |
 |----------------|--------------------|---------------------------------------------------------------------------------------------------|
 | Node.js        | 22 LTS             | [nodejs.org](https://nodejs.org)                                                                  |
-| Go             | 1.23+              | [go.dev/dl](https://go.dev/dl)                                                                    |
+| Go             | 1.25.7+            | [go.dev/dl](https://go.dev/dl)                                                                    |
 | golangci-lint  | 2.x                | [golangci-lint.run](https://golangci-lint.run/welcome/install/)                                  |
 | Java JDK       | **21+** (required) | [adoptium.net](https://adoptium.net) or `sdk install java 21-tem` via [SDKMAN](https://sdkman.io) |
 | Docker Desktop | Latest             | [docker.com](https://www.docker.com/products/docker-desktop)                                      |

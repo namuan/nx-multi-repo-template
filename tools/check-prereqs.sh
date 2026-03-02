@@ -67,16 +67,16 @@ else
   missing "pnpm" "required: 10+  →  npm install -g pnpm@10"
 fi
 
-# ── Go (≥ 1.23) ──────────────────────────────────────────────────────────────
+# ── Go (≥ 1.25.7) ────────────────────────────────────────────────────────────
 if command -v go &>/dev/null; then
   GO_VER=$(go version | awk '{print $3}' | sed 's/^go//')
-  if version_gte "$GO_VER" "1.23.0"; then
-    pass "Go" "$GO_VER" "required: 1.23+"
+  if version_gte "$GO_VER" "1.25.7"; then
+    pass "Go" "$GO_VER" "required: 1.25.7+"
   else
-    fail "Go" "$GO_VER" "required: 1.23+  →  https://go.dev/dl"
+    fail "Go" "$GO_VER" "required: 1.25.7+  →  https://go.dev/dl"
   fi
 else
-  missing "Go" "required: 1.23+  →  https://go.dev/dl"
+  missing "Go" "required: 1.25.7+  →  https://go.dev/dl"
 fi
 
 # ── Java (≥ 21) ──────────────────────────────────────────────────────────────

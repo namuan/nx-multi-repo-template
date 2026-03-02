@@ -38,7 +38,7 @@ This project is organized as an Nx-based polyglot monorepo with a React frontend
 | App | Technology |
 |-----|-----------|
 | `apps/frontend` | React 19, Vite, TypeScript |
-| `apps/api-go` | Go 1.23, net/http |
+| `apps/api-go` | Go 1.25.7, net/http |
 | `apps/api-java` | Spring Boot 3.4, Java 21, Maven |
 | `libs/ui-shared` | Shared React components |
 
