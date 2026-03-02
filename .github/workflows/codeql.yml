@@ -44,8 +44,13 @@ jobs:
         with:
           languages: ${{ matrix.language }}
 
-      - name: Autobuild
+      - name: Autobuild (JS/Go)
+        if: matrix.language != 'java-kotlin'
         uses: github/codeql-action/autobuild@v3
+
+      - name: Build Java
+        if: matrix.language == 'java-kotlin'
+        run: mvn -B package -DskipTests --file apps/api-java/pom.xml
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
