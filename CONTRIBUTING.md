@@ -33,6 +33,22 @@ Use JDK 21 for Java tasks:
 sdk use java 21.0.3-tem
 ```
 
+## Git Hooks (Lefthook)
+
+This repository uses Lefthook for pre-commit automation.
+
+- Install hooks (also runs automatically on dependency install via `prepare`):
+
+```bash
+pnpm hooks:install
+```
+
+- Run pre-commit checks manually:
+
+```bash
+pnpm hooks:run:pre-commit
+```
+
 ## Release Flow
 
 - Merge to `main` after review and green CI.

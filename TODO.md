@@ -6,6 +6,13 @@ This file tracks active, not-yet-completed work only. Completed items are remove
 
 ---
 
+## AI
+
+- [ ] **Add Instruction files for different tech stack**
+- [ ] **Add Skills for common tasks** (e.g., "How to add a new API endpoint?", "How to add a new database migration?")
+
+---
+
 ## CI/CD and Release
 
 - [ ] **Push Docker images to a registry** — CI currently builds but does not publish images

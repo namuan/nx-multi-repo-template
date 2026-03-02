@@ -1,0 +1,21 @@
+pre-commit:
+  parallel: true
+  commands:
+    prettier:
+      glob: "**/*.{js,jsx,ts,tsx,css,md,json,yml,yaml}"
+      run: pnpm prettier --write {staged_files}
+      stage_fixed: true
+
+    eslint:
+      glob: "**/*.{js,jsx,ts,tsx}"
+      run: pnpm eslint --fix {staged_files}
+      stage_fixed: true
+
+    gofmt:
+      glob: "apps/api-go/**/*.go"
+      run: gofmt -w {staged_files}
+      stage_fixed: true
+
+    java-compile:
+      glob: "apps/api-java/**/*.java"
+      run: mvn -f apps/api-java/pom.xml -q -DskipTests compile

@@ -1,8 +1,0 @@
-{
-  "*.{js,jsx,ts,tsx,css,md,json,yml,yaml}": [
-    "prettier --write"
-  ],
-  "apps/api-go/**/*.go": [
-    "gofmt -w"
-  ]
-}
