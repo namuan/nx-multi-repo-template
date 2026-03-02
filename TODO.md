@@ -1,21 +1,14 @@
 # Active Production Readiness TODO
 
-Last refreshed: 2026-03-01
+Last refreshed: 2026-03-02
 
 This file tracks active, not-yet-completed work only. Completed items are removed to keep this list actionable.
 
 ---
 
-## AI
-
-- [ ] **Add Instruction files for different tech stack**
-- [ ] **Add Skills for common tasks** (e.g., "How to add a new API endpoint?", "How to add a new database migration?")
-
----
-
 ## CI/CD and Release
 
-- [ ] **Push Docker images to a registry** — CI currently builds but does not publish images
+- [ ] **Push Docker images to a registry** — CI builds images on `main` but does not publish them
 - [ ] **Add CD workflow** — create `.github/workflows/deploy.yml` for Helm deploys after successful image publish
 - [ ] **Separate staging and production deploys** — parameterize by environment and require manual approval for production
 - [ ] **Automate release tagging and changelog** — add semantic versioning and changelog generation
@@ -25,7 +18,7 @@ This file tracks active, not-yet-completed work only. Completed items are remove
 ## Security
 
 - [ ] **Harden authentication and authorization coverage** — ensure all externally exposed endpoints enforce appropriate authN/authZ
-- [ ] **Add container image scanning in CI** — integrate Trivy/Grype gates before image publish
+- [ ] **Add container image scanning in CI** — dependency scanning exists, but image scanning (Trivy/Grype) is not yet enforced
 - [ ] **Define secret rotation playbook** — document rotation cadence and procedures for JWT and DB credentials
 
 ---
