@@ -7,12 +7,11 @@ import com.example.fleet.dto.response.PageResponse;
 import com.example.fleet.security.TenantContext;
 import com.example.fleet.service.AlertService;
 import jakarta.validation.Valid;
+import java.util.List;
+import java.util.UUID;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api")
@@ -30,8 +29,9 @@ public class AlertController {
     public ResponseEntity<PageResponse<Alert>> listAlerts(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
-        return ResponseEntity.ok(PageResponse.from(
-                alertService.getAlerts(currentTenantId(), PageRequest.of(page, size))));
+        return ResponseEntity.ok(
+                PageResponse.from(
+                        alertService.getAlerts(currentTenantId(), PageRequest.of(page, size))));
     }
 
     @GetMapping("/alerts/unacknowledged")
@@ -61,14 +61,16 @@ public class AlertController {
     @PostMapping("/alert-rules")
     public ResponseEntity<AlertRule> createRule(@Valid @RequestBody CreateAlertRuleRequest req) {
         TenantContext ctx = TenantContext.get();
-        return ResponseEntity.status(201).body(
-                alertService.createRule(ctx.tenantId(), req, ctx.userId(), null));
+        return ResponseEntity.status(201)
+                .body(alertService.createRule(ctx.tenantId(), req, ctx.userId(), null));
     }
 
     @PatchMapping("/alert-rules/{id}/toggle")
-    public ResponseEntity<AlertRule> toggleRule(@PathVariable UUID id, @RequestParam boolean active) {
+    public ResponseEntity<AlertRule> toggleRule(
+            @PathVariable UUID id, @RequestParam boolean active) {
         TenantContext ctx = TenantContext.get();
-        return ResponseEntity.ok(alertService.toggleRule(ctx.tenantId(), id, active, ctx.userId(), null));
+        return ResponseEntity.ok(
+                alertService.toggleRule(ctx.tenantId(), id, active, ctx.userId(), null));
     }
 
     @DeleteMapping("/alert-rules/{id}")

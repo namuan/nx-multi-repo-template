@@ -1,15 +1,14 @@
 package com.example.fleet.domain.entity;
 
 import jakarta.persistence.*;
+import java.time.Instant;
+import java.util.Map;
+import java.util.UUID;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
-
-import java.time.Instant;
-import java.util.Map;
-import java.util.UUID;
 
 @Entity
 @Table(name = "audit_logs")
@@ -39,6 +38,5 @@ public class AuditLog {
 
     private String ipAddress;
 
-    @CreationTimestamp
-    private Instant createdAt;
+    @CreationTimestamp private Instant createdAt;
 }

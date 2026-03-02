@@ -3,22 +3,22 @@ package com.example.fleet.security;
 import java.util.UUID;
 
 /**
- * Thread-local holder for the current authenticated user's identity.
- * Populated by JwtAuthFilter before the request reaches any controller.
+ * Thread-local holder for the current authenticated user's identity. Populated by JwtAuthFilter
+ * before the request reaches any controller.
  */
 public final class TenantContext {
 
     private static final ThreadLocal<TenantContext> HOLDER = new ThreadLocal<>();
 
-    private final UUID userId;
-    private final UUID tenantId;
-    private final String role;
+    private final UUID currentUserId;
+    private final UUID currentTenantId;
+    private final String currentRole;
     private final boolean platformAdmin;
 
     private TenantContext(UUID userId, UUID tenantId, String role, boolean platformAdmin) {
-        this.userId = userId;
-        this.tenantId = tenantId;
-        this.role = role;
+        this.currentUserId = userId;
+        this.currentTenantId = tenantId;
+        this.currentRole = role;
         this.platformAdmin = platformAdmin;
     }
 
@@ -34,8 +34,19 @@ public final class TenantContext {
         HOLDER.remove();
     }
 
-    public UUID userId()       { return userId; }
-    public UUID tenantId()     { return tenantId; }
-    public String role()       { return role; }
-    public boolean isPlatformAdmin() { return platformAdmin; }
+    public UUID userId() {
+        return currentUserId;
+    }
+
+    public UUID tenantId() {
+        return currentTenantId;
+    }
+
+    public String role() {
+        return currentRole;
+    }
+
+    public boolean isPlatformAdmin() {
+        return platformAdmin;
+    }
 }

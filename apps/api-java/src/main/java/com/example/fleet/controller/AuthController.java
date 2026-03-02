@@ -20,15 +20,15 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest req,
-                                               HttpServletRequest httpReq) {
+    public ResponseEntity<LoginResponse> login(
+            @Valid @RequestBody LoginRequest req, HttpServletRequest httpReq) {
         return ResponseEntity.ok(authService.login(req, httpReq.getRemoteAddr()));
     }
 
     @PostMapping("/register")
-    public ResponseEntity<LoginResponse> register(@Valid @RequestBody RegisterTenantRequest req,
-                                                  HttpServletRequest httpReq) {
-        return ResponseEntity.status(201).body(
-                authService.registerTenant(req, httpReq.getRemoteAddr()));
+    public ResponseEntity<LoginResponse> register(
+            @Valid @RequestBody RegisterTenantRequest req, HttpServletRequest httpReq) {
+        return ResponseEntity.status(201)
+                .body(authService.registerTenant(req, httpReq.getRemoteAddr()));
     }
 }

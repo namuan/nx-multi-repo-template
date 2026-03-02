@@ -1,7 +1,8 @@
 package com.example.apijava;
 
-import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.Test;
 
 // Legacy integration test stub — replaced by fleet integration tests
 class HelloEndpointIntegrationTest {

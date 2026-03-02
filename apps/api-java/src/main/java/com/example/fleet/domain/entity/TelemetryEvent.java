@@ -1,14 +1,13 @@
 package com.example.fleet.domain.entity;
 
 import jakarta.persistence.*;
+import java.time.Instant;
+import java.util.Map;
+import java.util.UUID;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
-
-import java.time.Instant;
-import java.util.Map;
-import java.util.UUID;
 
 @Entity
 @Table(name = "telemetry_events")
@@ -18,8 +17,7 @@ import java.util.UUID;
 public class TelemetryEvent {
 
     // Composite PK: (id, recorded_at) — required by the partitioned table
-    @Id
-    private UUID id;
+    @Id private UUID id;
 
     @Id
     @Column(nullable = false)

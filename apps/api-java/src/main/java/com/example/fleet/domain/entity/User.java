@@ -1,13 +1,12 @@
 package com.example.fleet.domain.entity;
 
 import jakarta.persistence.*;
+import java.time.Instant;
+import java.util.UUID;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
-import java.time.Instant;
-import java.util.UUID;
 
 @Entity
 @Table(name = "users")
@@ -35,13 +34,11 @@ public class User {
     private String role = "viewer";
 
     @Column(nullable = false)
-    private boolean isPlatformAdmin = false;
+    private boolean isPlatformAdmin;
 
     private Instant lastLogin;
 
-    @CreationTimestamp
-    private Instant createdAt;
+    @CreationTimestamp private Instant createdAt;
 
-    @UpdateTimestamp
-    private Instant updatedAt;
+    @UpdateTimestamp private Instant updatedAt;
 }

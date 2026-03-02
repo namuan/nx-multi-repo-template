@@ -10,5 +10,4 @@ public record LoginResponse(
         String tenantId,
         String tenantName,
         String primaryColor,
-        String logoUrl
-) {}
+        String logoUrl) {}

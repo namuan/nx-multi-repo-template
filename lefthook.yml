@@ -22,7 +22,7 @@ pre-commit:
 
     java-compile:
       glob: "apps/api-java/**/*.java"
-      run: mvn -f apps/api-java/pom.xml -q -DskipTests compile
+      run: mvn -f apps/api-java/pom.xml -q -DskipTests -Dmaven.compiler.fork=true -Dmaven.compiler.forceJavacCompilerUse=true compile
 
 pre-push:
   commands:

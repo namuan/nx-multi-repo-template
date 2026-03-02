@@ -2,13 +2,12 @@ package com.example.fleet.security;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
-import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.UUID;
+import javax.crypto.SecretKey;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 @Component
 public class JwtUtil {
@@ -23,6 +22,7 @@ public class JwtUtil {
         this.expirationMs = expirationMs;
     }
 
+    @SuppressWarnings("PMD.ReplaceJavaUtilDate")
     public String generate(UUID userId, UUID tenantId, String role, boolean isPlatformAdmin) {
         return Jwts.builder()
                 .subject(userId.toString())
@@ -36,11 +36,7 @@ public class JwtUtil {
     }
 
     public Claims parse(String token) {
-        return Jwts.parser()
-                .verifyWith(key)
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
+        return Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload();
     }
 
     public boolean isValid(String token) {

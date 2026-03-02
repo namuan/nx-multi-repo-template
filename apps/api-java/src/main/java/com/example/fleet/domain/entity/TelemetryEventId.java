@@ -6,10 +6,12 @@ import java.util.Objects;
 import java.util.UUID;
 
 /**
- * Composite primary key for TelemetryEvent.
- * Required because the partitioned table's PK is (id, recorded_at).
+ * Composite primary key for TelemetryEvent. Required because the partitioned table's PK is (id,
+ * recorded_at).
  */
 public class TelemetryEventId implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private UUID id;
     private Instant recordedAt;

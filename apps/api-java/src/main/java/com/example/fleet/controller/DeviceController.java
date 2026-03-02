@@ -7,11 +7,10 @@ import com.example.fleet.repository.TelemetryEventRepository;
 import com.example.fleet.security.TenantContext;
 import com.example.fleet.service.DeviceService;
 import jakarta.validation.Valid;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.UUID;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/devices")
@@ -43,10 +42,11 @@ public class DeviceController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Device> update(@PathVariable UUID id,
-                                         @Valid @RequestBody CreateDeviceRequest req) {
+    public ResponseEntity<Device> update(
+            @PathVariable UUID id, @Valid @RequestBody CreateDeviceRequest req) {
         TenantContext ctx = TenantContext.get();
-        return ResponseEntity.ok(deviceService.updateDevice(ctx.tenantId(), id, req, ctx.userId(), null));
+        return ResponseEntity.ok(
+                deviceService.updateDevice(ctx.tenantId(), id, req, ctx.userId(), null));
     }
 
     @DeleteMapping("/{id}")
@@ -59,7 +59,8 @@ public class DeviceController {
     @GetMapping("/{id}/telemetry")
     public ResponseEntity<List<TelemetryEvent>> telemetryHistory(@PathVariable UUID id) {
         return ResponseEntity.ok(
-                telemetryRepo.findTop100ByDeviceIdAndTenantIdOrderByRecordedAtDesc(id, currentTenantId()));
+                telemetryRepo.findTop100ByDeviceIdAndTenantIdOrderByRecordedAtDesc(
+                        id, currentTenantId()));
     }
 
     @GetMapping("/stats")

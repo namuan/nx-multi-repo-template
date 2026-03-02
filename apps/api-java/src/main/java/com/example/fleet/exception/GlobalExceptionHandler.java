@@ -1,5 +1,8 @@
 package com.example.fleet.exception;
 
+import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -7,10 +10,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.time.Instant;
-import java.util.HashMap;
-import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -22,7 +21,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ValidationErrorResponse> handleValidation(MethodArgumentNotValidException ex) {
+    public ResponseEntity<ValidationErrorResponse> handleValidation(
+            MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
         for (FieldError fe : ex.getBindingResult().getFieldErrors()) {
             errors.put(fe.getField(), fe.getDefaultMessage());
@@ -38,6 +38,7 @@ public class GlobalExceptionHandler {
     }
 
     public record ErrorResponse(int status, String message, Instant timestamp) {}
-    public record ValidationErrorResponse(int status, String message,
-                                          Map<String, String> errors, Instant timestamp) {}
+
+    public record ValidationErrorResponse(
+            int status, String message, Map<String, String> errors, Instant timestamp) {}
 }
