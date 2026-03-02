@@ -17,7 +17,6 @@ This file tracks active, not-yet-completed work only. Completed items are remove
 
 ## Security
 
-- [ ] **Harden authentication and authorization coverage** — ensure all externally exposed endpoints enforce appropriate authN/authZ
 - [ ] **Add container image scanning in CI** — dependency scanning exists, but image scanning (Trivy/Grype) is not yet enforced
 - [ ] **Define secret rotation playbook** — document rotation cadence and procedures for JWT and DB credentials
 

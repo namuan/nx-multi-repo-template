@@ -93,7 +93,9 @@ For cross-service features (for example, new telemetry fields shown in dashboard
 ### Authentication and Authorization
 
 - User-facing APIs use JWT authentication.
+- Java API enforces role-based authorization for sensitive write paths (for example device and alert-rule mutation endpoints) and platform-admin checks for `/api/admin/*` operations.
 - Device telemetry ingestion uses `X-Device-Key` authentication.
+- Go JWT middleware for realtime paths validates required claims (`sub`, `tenant_id`, `role`) and rejects unsupported roles.
 - Frontend-origin CORS boundaries are enforced through environment configuration.
 
 ### Secrets and Configuration

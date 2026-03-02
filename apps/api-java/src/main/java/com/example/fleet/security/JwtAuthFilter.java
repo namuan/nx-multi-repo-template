@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.UUID;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,6 +19,9 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
+
+    private static final Set<String> ALLOWED_ROLES =
+            Set.of("fleet_admin", "dispatcher", "driver", "viewer");
 
     private final JwtUtil jwtUtil;
 
@@ -36,13 +40,24 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 if (jwtUtil.isValid(token)) {
                     Claims claims = jwtUtil.parse(token);
 
-                    UUID userId = UUID.fromString(claims.getSubject());
-                    UUID tenantId = UUID.fromString(claims.get("tenant_id", String.class));
+                    String userIdClaim = claims.getSubject();
+                    String tenantIdClaim = claims.get("tenant_id", String.class);
                     String role = claims.get("role", String.class);
+
+                    if (userIdClaim == null || tenantIdClaim == null || role == null) {
+                        throw new IllegalArgumentException("Missing required JWT claims");
+                    }
+                    String normalizedRole = role.toLowerCase(Locale.ROOT);
+                    if (!ALLOWED_ROLES.contains(normalizedRole)) {
+                        throw new IllegalArgumentException("Unsupported role claim");
+                    }
+
+                    UUID userId = UUID.fromString(userIdClaim);
+                    UUID tenantId = UUID.fromString(tenantIdClaim);
                     boolean isPlatformAdmin =
                             Boolean.TRUE.equals(claims.get("is_platform_admin", Boolean.class));
 
-                    TenantContext.set(userId, tenantId, role, isPlatformAdmin);
+                    TenantContext.set(userId, tenantId, normalizedRole, isPlatformAdmin);
 
                     var auth =
                             new UsernamePasswordAuthenticationToken(
@@ -50,7 +65,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                                     null,
                                     List.of(
                                             new SimpleGrantedAuthority(
-                                                    "ROLE_" + role.toUpperCase(Locale.ROOT))));
+                                                    "ROLE_"
+                                                            + normalizedRole.toUpperCase(
+                                                                    Locale.ROOT))));
                     SecurityContextHolder.getContext().setAuthentication(auth);
                 }
             }

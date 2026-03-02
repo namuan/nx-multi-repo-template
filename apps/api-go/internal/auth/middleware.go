@@ -6,6 +6,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"net/http"
+	"slices"
 	"strings"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -21,6 +22,8 @@ const (
 	// TenantIDKey stores the authenticated tenant ID in request context.
 	TenantIDKey contextKey = "tenant_id"
 )
+
+var allowedRoles = []string{"fleet_admin", "dispatcher", "driver", "viewer"}
 
 // JWTMiddleware validates a JWT token and injects claims into the request context.
 func JWTMiddleware(secret string, next http.Handler) http.Handler {
@@ -47,6 +50,15 @@ func JWTMiddleware(secret string, next http.Handler) http.Handler {
 		})
 		if err != nil || !token.Valid {
 			writeError(w, http.StatusUnauthorized, "invalid token")
+			return
+		}
+
+		if claims.UserID == "" || claims.TenantID == "" || claims.Role == "" {
+			writeError(w, http.StatusUnauthorized, "invalid token claims")
+			return
+		}
+		if !slices.Contains(allowedRoles, claims.Role) {
+			writeError(w, http.StatusUnauthorized, "invalid token claims")
 			return
 		}
 

@@ -22,6 +22,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
                 "Dependencies are Spring-managed singletons and CSRF is intentionally disabled for stateless JWT API endpoints.")
 public class SecurityConfig {
 
+    private static final String ROLE_FLEET_ADMIN = "FLEET_ADMIN";
+    private static final String ROLE_DISPATCHER = "DISPATCHER";
+    private static final String[] ADMIN_AND_DISPATCHER = {ROLE_FLEET_ADMIN, ROLE_DISPATCHER};
+
     private final JwtAuthFilter jwtAuthFilter;
 
     public SecurityConfig(JwtAuthFilter jwtAuthFilter) {
@@ -41,8 +45,28 @@ public class SecurityConfig {
                                         .permitAll()
                                         .requestMatchers(HttpMethod.POST, "/api/auth/register")
                                         .permitAll()
-                                        .requestMatchers("/actuator/**")
+                                        .requestMatchers("/actuator/health", "/actuator/prometheus")
                                         .permitAll()
+                                        .requestMatchers(
+                                                HttpMethod.GET, "/api/users", "/api/audit-logs")
+                                        .hasAnyRole(ADMIN_AND_DISPATCHER)
+                                        .requestMatchers(HttpMethod.PUT, "/api/tenants/me")
+                                        .hasRole(ROLE_FLEET_ADMIN)
+                                        .requestMatchers(HttpMethod.POST, "/api/devices")
+                                        .hasAnyRole(ADMIN_AND_DISPATCHER)
+                                        .requestMatchers(HttpMethod.PUT, "/api/devices/**")
+                                        .hasAnyRole(ADMIN_AND_DISPATCHER)
+                                        .requestMatchers(HttpMethod.DELETE, "/api/devices/**")
+                                        .hasAnyRole(ADMIN_AND_DISPATCHER)
+                                        .requestMatchers(
+                                                HttpMethod.POST, "/api/alerts/*/acknowledge")
+                                        .hasAnyRole(ADMIN_AND_DISPATCHER)
+                                        .requestMatchers(HttpMethod.POST, "/api/alert-rules")
+                                        .hasAnyRole(ADMIN_AND_DISPATCHER)
+                                        .requestMatchers(HttpMethod.PATCH, "/api/alert-rules/**")
+                                        .hasAnyRole(ADMIN_AND_DISPATCHER)
+                                        .requestMatchers(HttpMethod.DELETE, "/api/alert-rules/**")
+                                        .hasAnyRole(ADMIN_AND_DISPATCHER)
                                         .anyRequest()
                                         .authenticated())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
