@@ -1,3 +1,4 @@
+// Package ws provides tenant-isolated WebSocket broadcasting.
 package ws
 
 import (
@@ -18,7 +19,7 @@ const (
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 4096,
-	CheckOrigin: func(r *http.Request) bool {
+	CheckOrigin: func(_ *http.Request) bool {
 		// Origin check is handled by the CORS middleware upstream
 		return true
 	},
@@ -32,6 +33,7 @@ type Client struct {
 	send     chan []byte
 }
 
+// ServeWS upgrades an HTTP request to a tenant-scoped WebSocket connection.
 func ServeWS(hub *Hub, tenantID string, w http.ResponseWriter, r *http.Request) {
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
@@ -54,13 +56,21 @@ func ServeWS(hub *Hub, tenantID string, w http.ResponseWriter, r *http.Request) 
 func (c *Client) readPump() {
 	defer func() {
 		c.hub.unregister <- c
-		c.conn.Close()
+		if err := c.conn.Close(); err != nil {
+			slog.Debug("ws close failed", "error", err)
+		}
 	}()
 
 	c.conn.SetReadLimit(maxMessageSize)
-	c.conn.SetReadDeadline(time.Now().Add(pongWait))
+	if err := c.conn.SetReadDeadline(time.Now().Add(pongWait)); err != nil {
+		slog.Debug("ws set read deadline failed", "error", err)
+		return
+	}
 	c.conn.SetPongHandler(func(string) error {
-		c.conn.SetReadDeadline(time.Now().Add(pongWait))
+		if err := c.conn.SetReadDeadline(time.Now().Add(pongWait)); err != nil {
+			slog.Debug("ws pong read deadline failed", "error", err)
+			return err
+		}
 		return nil
 	})
 
@@ -76,15 +86,21 @@ func (c *Client) writePump() {
 	ticker := time.NewTicker(pingPeriod)
 	defer func() {
 		ticker.Stop()
-		c.conn.Close()
+		if err := c.conn.Close(); err != nil {
+			slog.Debug("ws close failed", "error", err)
+		}
 	}()
 
 	for {
 		select {
 		case msg, ok := <-c.send:
-			c.conn.SetWriteDeadline(time.Now().Add(writeWait))
+			if err := c.conn.SetWriteDeadline(time.Now().Add(writeWait)); err != nil {
+				return
+			}
 			if !ok {
-				c.conn.WriteMessage(websocket.CloseMessage, []byte{})
+				if err := c.conn.WriteMessage(websocket.CloseMessage, []byte{}); err != nil {
+					slog.Debug("ws close frame failed", "error", err)
+				}
 				return
 			}
 			if err := c.conn.WriteMessage(websocket.TextMessage, msg); err != nil {
@@ -92,7 +108,9 @@ func (c *Client) writePump() {
 			}
 
 		case <-ticker.C:
-			c.conn.SetWriteDeadline(time.Now().Add(writeWait))
+			if err := c.conn.SetWriteDeadline(time.Now().Add(writeWait)); err != nil {
+				return
+			}
 			if err := c.conn.WriteMessage(websocket.PingMessage, nil); err != nil {
 				return
 			}

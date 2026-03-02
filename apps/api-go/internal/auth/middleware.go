@@ -1,3 +1,4 @@
+// Package auth contains JWT and device-key authentication helpers.
 package auth
 
 import (
@@ -13,11 +14,15 @@ import (
 type contextKey string
 
 const (
-	ClaimsKey   contextKey = "claims"
+	// ClaimsKey stores JWT claims in request context.
+	ClaimsKey contextKey = "claims"
+	// DeviceIDKey stores the authenticated device ID in request context.
 	DeviceIDKey contextKey = "device_id"
+	// TenantIDKey stores the authenticated tenant ID in request context.
 	TenantIDKey contextKey = "tenant_id"
 )
 
+// JWTMiddleware validates a JWT token and injects claims into the request context.
 func JWTMiddleware(secret string, next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Support token in query param for WebSocket connections
@@ -34,7 +39,7 @@ func JWTMiddleware(secret string, next http.Handler) http.Handler {
 		}
 
 		claims := &Claims{}
-		token, err := jwt.ParseWithClaims(tokenStr, claims, func(t *jwt.Token) (interface{}, error) {
+		token, err := jwt.ParseWithClaims(tokenStr, claims, func(t *jwt.Token) (any, error) {
 			if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
 				return nil, jwt.ErrSignatureInvalid
 			}
@@ -62,6 +67,7 @@ func DeviceAPIKeyMiddleware(db *sql.DB, next http.Handler) http.Handler {
 		}
 
 		var deviceID, tenantID string
+		//nolint:gosec // Query uses positional placeholders and no dynamic SQL construction.
 		err := db.QueryRowContext(r.Context(),
 			`SELECT id, tenant_id FROM devices WHERE api_key = $1 AND status != 'maintenance'`,
 			apiKey,
@@ -81,16 +87,19 @@ func DeviceAPIKeyMiddleware(db *sql.DB, next http.Handler) http.Handler {
 	})
 }
 
+// GetClaims returns JWT claims from request context.
 func GetClaims(ctx context.Context) *Claims {
 	c, _ := ctx.Value(ClaimsKey).(*Claims)
 	return c
 }
 
+// GetDeviceID returns device ID from request context.
 func GetDeviceID(ctx context.Context) string {
 	v, _ := ctx.Value(DeviceIDKey).(string)
 	return v
 }
 
+// GetTenantID returns tenant ID from request context.
 func GetTenantID(ctx context.Context) string {
 	v, _ := ctx.Value(TenantIDKey).(string)
 	return v
@@ -99,5 +108,7 @@ func GetTenantID(ctx context.Context) string {
 func writeError(w http.ResponseWriter, code int, msg string) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(code)
-	json.NewEncoder(w).Encode(map[string]string{"error": msg})
+	if err := json.NewEncoder(w).Encode(map[string]string{"error": msg}); err != nil {
+		http.Error(w, "failed to write error response", http.StatusInternalServerError)
+	}
 }

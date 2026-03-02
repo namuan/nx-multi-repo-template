@@ -1,3 +1,4 @@
+// Package telemetry handles device telemetry ingestion and alert generation.
 package telemetry
 
 import (
@@ -15,6 +16,7 @@ import (
 	"github.com/nx-polyglot/api-go/internal/ws"
 )
 
+// Handler ingests telemetry events, updates latest device state, and emits alerts.
 type Handler struct {
 	db      *sql.DB
 	hub     *ws.Hub
@@ -28,6 +30,7 @@ type alertRule struct {
 	Severity  string
 }
 
+// NewHandler constructs an HTTP handler for telemetry ingestion.
 func NewHandler(db *sql.DB, hub *ws.Hub, limiter *ratelimit.TenantLimiter) *Handler {
 	return &Handler{db: db, hub: hub, limiter: limiter}
 }
@@ -42,24 +45,18 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	tenantID := auth.GetTenantID(r.Context())
 
 	if !h.limiter.Allow(tenantID) {
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusTooManyRequests)
-		json.NewEncoder(w).Encode(map[string]string{"error": "rate limit exceeded"})
+		writeJSON(w, http.StatusTooManyRequests, map[string]string{"error": "rate limit exceeded"})
 		return
 	}
 
 	var p Payload
 	if err := json.NewDecoder(r.Body).Decode(&p); err != nil {
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(map[string]string{"error": "invalid JSON"})
+		writeJSON(w, http.StatusBadRequest, map[string]string{"error": "invalid JSON"})
 		return
 	}
 
 	if p.Lat < -90 || p.Lat > 90 || p.Lng < -180 || p.Lng > 180 {
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(map[string]string{"error": "invalid coordinates"})
+		writeJSON(w, http.StatusBadRequest, map[string]string{"error": "invalid coordinates"})
 		return
 	}
 
@@ -68,14 +65,19 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		p.RecordedAt = &now
 	}
 
-	metaJSON, _ := json.Marshal(p.Metadata)
+	metaJSON, err := json.Marshal(p.Metadata)
+	if err != nil {
+		writeJSON(w, http.StatusBadRequest, map[string]string{"error": "invalid metadata"})
+		return
+	}
 	if metaJSON == nil {
 		metaJSON = []byte("{}")
 	}
 
 	eventID := uuid.New().String()
 
-	_, err := h.db.ExecContext(r.Context(), `
+	//nolint:gosec // Query uses positional placeholders and no dynamic SQL construction.
+	_, err = h.db.ExecContext(r.Context(), `
 		INSERT INTO telemetry_events
 		  (id, tenant_id, device_id, lat, lng, speed, heading, altitude, fuel_level, engine_temp, odometer, metadata, recorded_at)
 		VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)`,
@@ -85,20 +87,21 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		metaJSON, p.RecordedAt,
 	)
 	if err != nil {
-		slog.Error("telemetry insert failed", "error", err, "device", deviceID)
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusInternalServerError)
-		json.NewEncoder(w).Encode(map[string]string{"error": "storage error"})
+		slog.Error("telemetry insert failed", "error", err)
+		writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "storage error"})
 		return
 	}
 
 	// Update device last-seen position
-	_, _ = h.db.ExecContext(r.Context(), `
+	//nolint:gosec // Query uses positional placeholders and no dynamic SQL construction.
+	if _, err = h.db.ExecContext(r.Context(), `
 		UPDATE devices
 		SET last_lat=$1, last_lng=$2, last_speed=$3, last_heading=$4, last_seen=$5, status='online', updated_at=now()
 		WHERE id=$6`,
 		p.Lat, p.Lng, p.Speed, p.Heading, p.RecordedAt, deviceID,
-	)
+	); err != nil {
+		slog.Error("device latest-state update failed", "error", err)
+	}
 
 	h.generateAlerts(r.Context(), tenantID, deviceID, p)
 
@@ -113,24 +116,31 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		Heading:  p.Heading,
 		Status:   "online",
 	}
-	payload, _ := json.Marshal(event)
-	h.hub.BroadcastToTenant(tenantID, payload)
+	payload, err := json.Marshal(event)
+	if err != nil {
+		slog.Error("telemetry event marshal failed", "error", err)
+	} else {
+		h.hub.BroadcastToTenant(tenantID, payload)
+	}
 
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusAccepted)
-	json.NewEncoder(w).Encode(map[string]string{"id": eventID, "status": "accepted"})
+	writeJSON(w, http.StatusAccepted, map[string]string{"id": eventID, "status": "accepted"})
 }
 
 func (h *Handler) generateAlerts(ctx context.Context, tenantID string, deviceID string, payload Payload) {
+	//nolint:gosec // Query uses positional placeholders and no dynamic SQL construction.
 	rows, err := h.db.QueryContext(ctx, `
 		SELECT id, type, threshold, severity
 		FROM alert_rules
 		WHERE tenant_id = $1 AND active = true`, tenantID)
 	if err != nil {
-		slog.Error("alert rules query failed", "error", err, "tenant", tenantID)
+		slog.Error("alert rules query failed", "error", err)
 		return
 	}
-	defer rows.Close()
+	defer func() {
+		if closeErr := rows.Close(); closeErr != nil {
+			slog.Error("alert rule rows close failed", "error", closeErr)
+		}
+	}()
 
 	deviceName := h.deviceName(ctx, tenantID, deviceID)
 	now := time.Now().UTC()
@@ -151,23 +161,25 @@ func (h *Handler) generateAlerts(ctx context.Context, tenantID string, deviceID 
 			continue
 		}
 
+		//nolint:gosec // Query uses positional placeholders and no dynamic SQL construction.
 		_, err = h.db.ExecContext(ctx, `
 			INSERT INTO alerts (id, tenant_id, device_id, rule_id, type, message, severity, acknowledged, created_at)
 			VALUES ($1,$2,$3,$4,$5,$6,$7,false,$8)`,
 			uuid.New().String(), tenantID, deviceID, rule.ID, rule.Type, message, rule.Severity, now,
 		)
 		if err != nil {
-			slog.Error("alert insert failed", "error", err, "tenant", tenantID, "device", deviceID, "rule", rule.ID)
+			slog.Error("alert insert failed", "error", err)
 		}
 	}
 
 	if err := rows.Err(); err != nil {
-		slog.Error("alert rule iteration failed", "error", err, "tenant", tenantID)
+		slog.Error("alert rule iteration failed", "error", err)
 	}
 }
 
 func (h *Handler) hasOpenAlert(ctx context.Context, tenantID string, deviceID string, ruleID string) bool {
 	var count int
+	//nolint:gosec // Query uses positional placeholders and no dynamic SQL construction.
 	err := h.db.QueryRowContext(ctx, `
 		SELECT COUNT(1)
 		FROM alerts
@@ -175,7 +187,7 @@ func (h *Handler) hasOpenAlert(ctx context.Context, tenantID string, deviceID st
 		tenantID, deviceID, ruleID,
 	).Scan(&count)
 	if err != nil {
-		slog.Error("open alert lookup failed", "error", err, "tenant", tenantID, "device", deviceID, "rule", ruleID)
+		slog.Error("open alert lookup failed", "error", err)
 		return false
 	}
 
@@ -184,6 +196,7 @@ func (h *Handler) hasOpenAlert(ctx context.Context, tenantID string, deviceID st
 
 func (h *Handler) deviceName(ctx context.Context, tenantID string, deviceID string) string {
 	var name string
+	//nolint:gosec // Query uses positional placeholders and no dynamic SQL construction.
 	err := h.db.QueryRowContext(ctx, `
 		SELECT name
 		FROM devices
@@ -193,6 +206,14 @@ func (h *Handler) deviceName(ctx context.Context, tenantID string, deviceID stri
 	}
 
 	return name
+}
+
+func writeJSON(w http.ResponseWriter, status int, payload map[string]string) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(status)
+	if err := json.NewEncoder(w).Encode(payload); err != nil {
+		http.Error(w, "failed to write response", http.StatusInternalServerError)
+	}
 }
 
 func evaluateRule(rule alertRule, payload Payload, deviceName string) (bool, string) {

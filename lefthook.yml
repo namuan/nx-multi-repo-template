@@ -12,9 +12,13 @@ pre-commit:
       stage_fixed: true
 
     gofmt:
-      glob: "apps/api-go/**/*.go"
+      glob: "**/*.go"
       run: gofmt -w {staged_files}
       stage_fixed: true
+
+    go-lint:
+      glob: "apps/api-go/**/*.go"
+      run: npm run go:lint
 
     java-compile:
       glob: "apps/api-java/**/*.java"

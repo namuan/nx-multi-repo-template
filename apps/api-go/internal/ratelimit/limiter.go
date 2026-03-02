@@ -1,3 +1,4 @@
+// Package ratelimit implements tenant-scoped token-bucket rate limiting.
 package ratelimit
 
 import (
@@ -18,6 +19,7 @@ type bucket struct {
 	lastSeen time.Time
 }
 
+// NewTenantLimiter creates a per-tenant token-bucket limiter.
 func NewTenantLimiter(ratePerSec, burst int) *TenantLimiter {
 	l := &TenantLimiter{
 		buckets: make(map[string]*bucket),
@@ -34,6 +36,7 @@ func NewTenantLimiter(ratePerSec, burst int) *TenantLimiter {
 	return l
 }
 
+// Allow consumes one token for a tenant and reports whether the request is allowed.
 func (l *TenantLimiter) Allow(tenantID string) bool {
 	l.mu.Lock()
 	defer l.mu.Unlock()

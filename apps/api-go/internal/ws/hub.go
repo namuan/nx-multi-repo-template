@@ -1,3 +1,4 @@
+// Package ws provides tenant-isolated WebSocket broadcasting.
 package ws
 
 import (
@@ -20,6 +21,7 @@ type tenantMessage struct {
 	payload  []byte
 }
 
+// NewHub creates a WebSocket hub for tenant-scoped rooms.
 func NewHub() *Hub {
 	return &Hub{
 		rooms:      make(map[string]map[*Client]bool),
@@ -29,6 +31,7 @@ func NewHub() *Hub {
 	}
 }
 
+// Run starts the hub event loop.
 func (h *Hub) Run() {
 	for {
 		select {

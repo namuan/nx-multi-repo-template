@@ -1,3 +1,4 @@
+// Package main starts the Go telemetry ingestion and WebSocket API service.
 package main
 
 import (
@@ -30,7 +31,11 @@ func main() {
 		slog.Error("database connection failed", "error", err)
 		os.Exit(1)
 	}
-	defer database.Close()
+	defer func() {
+		if closeErr := database.Close(); closeErr != nil {
+			slog.Error("database close failed", "error", closeErr)
+		}
+	}()
 	slog.Info("database connected")
 
 	hub := ws.NewHub()
@@ -44,9 +49,11 @@ func main() {
 	mux := http.NewServeMux()
 
 	// Health + metrics
-	mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/health", func(w http.ResponseWriter, _ *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(map[string]string{"status": "ok", "service": "api-go"})
+		if err := json.NewEncoder(w).Encode(map[string]string{"status": "ok", "service": "api-go"}); err != nil {
+			http.Error(w, "failed to write health payload", http.StatusInternalServerError)
+		}
 	})
 	mux.Handle("/metrics", promhttp.Handler())
 
@@ -60,7 +67,7 @@ func main() {
 	// WebSocket — JWT auth
 	mux.Handle("/ws",
 		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			auth.JWTMiddleware(cfg.JWTSecret, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			auth.JWTMiddleware(cfg.JWTSigningKey, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 				tenantID := auth.GetTenantID(r.Context())
 				ws.ServeWS(hub, tenantID, w, r)
 			})).ServeHTTP(w, r)

@@ -12,6 +12,7 @@ For cluster deploy/rollback/debug operations, see `docs/runbook.md`.
 |----------------|--------------------|---------------------------------------------------------------------------------------------------|
 | Node.js        | 22 LTS             | [nodejs.org](https://nodejs.org)                                                                  |
 | Go             | 1.23+              | [go.dev/dl](https://go.dev/dl)                                                                    |
+| golangci-lint  | 2.x                | [golangci-lint.run](https://golangci-lint.run/welcome/install/)                                  |
 | Java JDK       | **21+** (required) | [adoptium.net](https://adoptium.net) or `sdk install java 21-tem` via [SDKMAN](https://sdkman.io) |
 | Docker Desktop | Latest             | [docker.com](https://www.docker.com/products/docker-desktop)                                      |
 | pnpm           | 10+                | `npm install -g pnpm@10`                                                                          |
@@ -319,6 +320,9 @@ Each tenant's fleet is fully isolated — logging in as `alice@acme.com` shows o
 | `npm run test:e2e:frontend` | Runs Playwright UI E2E (`apps/frontend-e2e`) against real frontend + backend APIs with API-seeded test data |
 | `npm run test:e2e:frontend:ui` | Runs the frontend Playwright suite in interactive Playwright UI mode |
 | `npm run test:e2e:frontend:ci` | Runs the same frontend UI E2E suite with CI configuration and reporting defaults |
+| `npm run go:lint`          | Runs `golangci-lint` for `apps/api-go` using the shared root config (`.golangci.yml`) |
+| `npm run go:format`        | Applies Go formatting/import ordering through `golangci-lint fmt` for `apps/api-go` |
+| `npm run go:vulncheck`     | Runs `govulncheck` for `apps/api-go` |
 | `npm run lint`             | Lint all projects (Nx affected)                                                             |
 | `npm run test`             | Run all test suites                                                                         |
 | `npm run build`            | Production build for all projects                                                           |

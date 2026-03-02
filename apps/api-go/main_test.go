@@ -9,9 +9,11 @@ import (
 
 func TestHealthEndpoint(t *testing.T) {
 	mux := http.NewServeMux()
-	mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/health", func(w http.ResponseWriter, _ *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(map[string]string{"status": "ok", "service": "api-go"})
+		if err := json.NewEncoder(w).Encode(map[string]string{"status": "ok", "service": "api-go"}); err != nil {
+			t.Fatalf("failed to write health response: %v", err)
+		}
 	})
 
 	req := httptest.NewRequest(http.MethodGet, "/health", nil)
@@ -38,7 +40,7 @@ func TestHealthEndpoint(t *testing.T) {
 }
 
 func TestCorsMiddleware_AllowsConfiguredOrigin(t *testing.T) {
-	inner := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	inner := http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusOK)
 	})
 	handler := corsMiddleware("http://localhost:9100", inner)
@@ -53,7 +55,7 @@ func TestCorsMiddleware_AllowsConfiguredOrigin(t *testing.T) {
 }
 
 func TestCorsMiddleware_OptionsReturnsNoContent(t *testing.T) {
-	inner := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	inner := http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusTeapot)
 	})
 	handler := corsMiddleware("http://localhost:9100", inner)
