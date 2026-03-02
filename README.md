@@ -56,6 +56,7 @@ npm run db:seed
 - Contribution workflow: `CONTRIBUTING.md`
 - Operational runbook (deploy/rollback/debug): `docs/runbook.md`
 - System architecture: `docs/polyglot-architecture.md`
+- Feature routing guide (Go vs Java): `docs/polyglot-architecture.md#feature-routing-guide-go-vs-java`
 - Backend E2E architecture: `docs/e2e-architecture.md`
 - Database migration conventions: `docs/db-migrations.md`
 - ADRs: `docs/adr/`

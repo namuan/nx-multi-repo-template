@@ -65,6 +65,24 @@ flowchart LR
 - Domain tables include tenants, users, devices, alerts, and audit logs.
 - Telemetry events are partitioned by time for scale and retention operations.
 
+## Feature Routing Guide (Go vs Java)
+
+Use this as the default decision guide for new backend features.
+
+| Feature type                                                     | Primary service | Rationale                                                                  |
+| ---------------------------------------------------------------- | --------------- | -------------------------------------------------------------------------- |
+| Device-originated telemetry ingestion (`/api/devices/telemetry`) | Go API          | Optimized for high-frequency ingest, rate limiting, and real-time fan-out. |
+| Real-time tenant streams (WebSocket)                             | Go API          | Owns WebSocket hub and low-latency event broadcast path.                   |
+| User auth and tenant onboarding                                  | Java API        | Owns user-facing JWT login/register and tenant domain flows.               |
+| Fleet/device CRUD, alerts, dashboard REST                        | Java API        | Owns business-domain REST and tenant-scoped query/read models.             |
+| Operational health/metrics                                       | Service-local   | Keep existing probes stable: Go `/health`, Java `/actuator/health`.        |
+
+For cross-service features (for example, new telemetry fields shown in dashboard views):
+
+1. Implement ingestion/realtime changes in Go API.
+2. Implement user-facing read/query/CRUD exposure in Java API.
+3. Update shared DB migrations and add/adjust cross-service E2E coverage.
+
 ## Data and Security Model
 
 ### Tenant Isolation
