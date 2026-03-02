@@ -32,6 +32,8 @@ helm rollback api-go <REVISION>
 - Frontend service: `GET /`
 - Go API service: `GET /health`
 - Java API service: `GET /actuator/health`
+- Go API metrics: `GET /metrics`
+- Java API metrics: `GET /actuator/prometheus`
 
 Use service-level checks plus pod readiness:
 
@@ -39,6 +41,30 @@ Use service-level checks plus pod readiness:
 kubectl get pods -n <namespace>
 kubectl get deploy -n <namespace>
 ```
+
+## Metrics Collection (Prometheus Operator)
+
+Both API Helm charts support optional monitoring configuration.
+
+Enable ServiceMonitor resources during deploy:
+
+```bash
+helm upgrade --install api-go charts/api-go \
+	--set monitoring.serviceMonitor.enabled=true
+
+helm upgrade --install api-java charts/api-java \
+	--set monitoring.serviceMonitor.enabled=true
+```
+
+If your Prometheus stack selects ServiceMonitors by label, pass additional labels:
+
+```bash
+helm upgrade --install api-go charts/api-go \
+	--set monitoring.serviceMonitor.enabled=true \
+	--set monitoring.serviceMonitor.additionalLabels.release=prometheus
+```
+
+Optional scrape annotations are also supported through `monitoring.serviceAnnotations` and `monitoring.podAnnotations` in each chart values file.
 
 ## Debugging
 

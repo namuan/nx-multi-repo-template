@@ -54,6 +54,9 @@ cp .env.example .env
 # Start full local stack (db + APIs + frontend)
 npm run dev:up
 
+# Start local stack with Prometheus + Grafana
+npm run dev:up:obs
+
 # Run backend and frontend E2E suites
 npm run test:e2e:backend
 npm run test:e2e:frontend
@@ -80,6 +83,7 @@ npm run db:seed
 ## Documentation Map
 
 - Local development: `LOCAL_DEV.md`
+- Local observability dashboard (Prometheus + Grafana): `LOCAL_DEV.md` (Option A)
 - Contribution workflow: `.github/pull_request_template.md` and `lefthook.yml`
 - Operational runbook (deploy/rollback/debug): `docs/runbook.md`
 - System architecture: `docs/polyglot-architecture.md`

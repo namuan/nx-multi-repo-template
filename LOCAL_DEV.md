@@ -55,7 +55,20 @@ Builds all images and starts PostgreSQL, the Go API, the Java API, and the React
 | Java API   | http://localhost:9102 |
 | PostgreSQL | localhost:5432        |
 
-**4. (Optional) Start with the device simulator**
+**4. (Optional) Start with Prometheus + Grafana observability**
+
+```sh
+npm run dev:up:obs
+```
+
+Starts the full local stack plus Prometheus and Grafana.
+
+| Service    | URL                   | Default credentials |
+|------------|-----------------------|---------------------|
+| Prometheus | http://localhost:9090 | n/a                 |
+| Grafana    | http://localhost:3000 | `admin` / `admin`   |
+
+**5. (Optional) Start with the device simulator**
 
 ```sh
 npm run dev:up:demo
@@ -64,7 +77,7 @@ npm run dev:up:demo
 Adds a simulator container that sends live GPS telemetry for all 8 demo devices, so the map moves in real time without
 any manual steps.
 
-**5. Stop everything**
+**6. Stop everything**
 
 ```sh
 npm run dev:down
@@ -238,7 +251,10 @@ Each tenant's fleet is fully isolated — logging in as `alice@acme.com` shows o
 |----------------------------|--------------------------------------------------|
 | `npm run dev:up`           | Build images and start all services (foreground) |
 | `npm run dev:up:demo`      | Same, plus the device simulator                  |
+| `npm run dev:up:obs`       | Same as `dev:up`, plus Prometheus and Grafana    |
+| `npm run dev:up:demo:obs`  | Same as `dev:up:demo`, plus Prometheus and Grafana |
 | `npm run dev:up:detached`  | Same as `dev:up` but runs in background          |
+| `npm run dev:up:obs:detached` | Same as `dev:up:obs` but runs in background   |
 | `npm run dev:down`         | Stop containers and kill the tmux session        |
 | `npm run dev:docker:build` | Build images without starting containers         |
 
@@ -271,6 +287,8 @@ Each tenant's fleet is fully isolated — logging in as `alice@acme.com` shows o
 | `npm run dev:logs:go`       | Tail Go API logs                                                   |
 | `npm run dev:logs:java`     | Tail Java API logs                                                 |
 | `npm run dev:logs:frontend` | Tail nginx logs                                                    |
+| `npm run dev:logs:prometheus` | Tail Prometheus logs                                             |
+| `npm run dev:logs:grafana`  | Tail Grafana logs                                                  |
 | `npm run dev:logs:all`      | Single stream of all app logs (tmux aggregate, or docker fallback) |
 
 ### Quality
@@ -330,6 +348,8 @@ npm run dev:down
 ```
 
 Then check for other processes on ports 9100, 9101, 9102, or 5432.
+
+If using observability profile, also check ports 9090 and 3000.
 
 **Go dependencies missing after a pull**
 
@@ -403,3 +423,24 @@ not affected — it always uses `eclipse-temurin:21`.
 **Frontend shows auth errors**
 
 Verify `VITE_API_JAVA_URL` in your `.env` points to the running Java API, then restart `npm run dev:frontend`.
+
+**Prometheus/Grafana dashboard is empty**
+
+Make sure the observability profile is running:
+
+```sh
+npm run dev:up:obs
+```
+
+Then verify scrape targets are reachable:
+
+```sh
+curl -sf http://localhost:9101/metrics > /dev/null && echo "api-go metrics ok"
+curl -sf http://localhost:9102/actuator/prometheus > /dev/null && echo "api-java metrics ok"
+```
+
+Open Prometheus targets page and confirm both jobs are UP:
+
+```text
+http://localhost:9090/targets
+```

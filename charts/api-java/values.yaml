@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   repository: myregistry/api-java
-  tag: "0.1.0"
+  tag: '0.1.0'
   pullPolicy: IfNotPresent
 
 service:
@@ -11,7 +11,7 @@ service:
 
 env:
   - name: SERVER_PORT
-    value: "8080"
+    value: '8080'
 
 ingress:
   enabled: false
@@ -54,3 +54,14 @@ resources:
   requests:
     cpu: 250m
     memory: 256Mi
+
+monitoring:
+  serviceAnnotations: {}
+  podAnnotations: {}
+  serviceMonitor:
+    enabled: false
+    namespace: ''
+    interval: 15s
+    scrapeTimeout: 10s
+    path: /actuator/prometheus
+    additionalLabels: {}

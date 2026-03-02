@@ -111,6 +111,43 @@ services:
       retries: 5
       start_period: 10s
 
+  # ─── Observability (local profile) ─────────────────────────────────────────
+  prometheus:
+    image: prom/prometheus:v2.52.0
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./tools/observability/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    depends_on:
+      api-go:
+        condition: service_healthy
+      api-java:
+        condition: service_healthy
+    profiles:
+      - observability
+
+  grafana:
+    image: grafana/grafana:10.4.3
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: "admin"
+      GF_SECURITY_ADMIN_PASSWORD: "admin"
+    volumes:
+      - ./tools/observability/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources:ro
+      - ./tools/observability/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./tools/observability/grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      prometheus:
+        condition: service_started
+    profiles:
+      - observability
+
   # ─── Device Simulator (demo only) ───────────────────────────────────────────
   simulator:
     build:
@@ -127,3 +164,5 @@ services:
 
 volumes:
   postgres_data:
+  prometheus_data:
+  grafana_data:
