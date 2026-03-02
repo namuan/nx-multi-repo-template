@@ -4,6 +4,8 @@ This runbook is for staging/production-style cluster operations.
 
 For local development and Docker/tmux workflows, use `LOCAL_DEV.md`.
 
+For credential lifecycle procedures, use `docs/secret-rotation-playbook.md`.
+
 ## Deploy
 
 ```bash

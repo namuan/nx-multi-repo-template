@@ -93,6 +93,7 @@ npm run db:seed
 - Local observability dashboard (Prometheus + Grafana): `LOCAL_DEV.md` (Option A)
 - Contribution workflow: `.github/pull_request_template.md` and `lefthook.yml`
 - Operational runbook (deploy/rollback/debug): `docs/runbook.md`
+- Secret rotation playbook (JWT + DB credentials): `docs/secret-rotation-playbook.md`
 - System architecture: `docs/polyglot-architecture.md`
 - Feature routing guide (Go vs Java): `docs/polyglot-architecture.md#feature-routing-guide-go-vs-java`
 - Backend E2E architecture: `docs/e2e-architecture.md`
