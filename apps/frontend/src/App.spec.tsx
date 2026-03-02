@@ -1,14 +1,11 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import App from './App';
 
 describe('App', () => {
-  it('renders headline', () => {
+  it('renders login screen for unauthenticated users', () => {
     render(<App />);
-    expect(screen.getByText('Nx Polyglot Monorepo')).toBeTruthy();
-
-    const button = screen.getByRole('button', { name: 'Count: 0' });
-    fireEvent.click(button);
-    expect(screen.getByRole('button', { name: 'Count: 1' })).toBeTruthy();
+    expect(screen.getByRole('heading', { name: 'FleetPilot' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Sign in' })).toBeTruthy();
   });
 });
