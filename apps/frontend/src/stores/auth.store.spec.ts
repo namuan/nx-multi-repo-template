@@ -91,12 +91,6 @@ describe('useAuthStore', () => {
       expect(localStorage.getItem('fleet_token')).toBeNull();
     });
 
-    it('removes fleet_user from localStorage', () => {
-      localStorage.setItem('fleet_user', '{"email":"alice@acme.com"}');
-      useAuthStore.getState().logout();
-      expect(localStorage.getItem('fleet_user')).toBeNull();
-    });
-
     it('disconnects WebSocket', () => {
       useAuthStore.getState().logout();
       expect(fleetWs.disconnect).toHaveBeenCalledTimes(1);

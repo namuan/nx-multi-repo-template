@@ -17,7 +17,6 @@ function makeClient(baseURL: string) {
     (err) => {
       if (err.response?.status === 401) {
         localStorage.removeItem('fleet_token');
-        localStorage.removeItem('fleet_user');
         window.location.href = '/login';
       }
       return Promise.reject(err);
@@ -124,8 +123,12 @@ export const auth = {
   login: (email: string, password: string) =>
     javaApi.post<LoginResponse>('/api/auth/login', { email, password }),
   register: (data: {
-    tenantName: string; subdomain: string;
-    adminEmail: string; adminPassword: string; adminName: string; primaryColor?: string;
+    tenantName: string;
+    subdomain: string;
+    adminEmail: string;
+    adminPassword: string;
+    adminName: string;
+    primaryColor?: string;
   }) => javaApi.post<LoginResponse>('/api/auth/register', data),
 };
 
@@ -133,17 +136,24 @@ export const auth = {
 export const devices = {
   list: () => javaApi.get<Device[]>('/api/devices'),
   get: (id: string) => javaApi.get<Device>(`/api/devices/${id}`),
-  create: (data: { name: string; type?: string; driverName?: string; licensePlate?: string; vin?: string }) =>
-    javaApi.post<Device>('/api/devices', data),
+  create: (data: {
+    name: string;
+    type?: string;
+    driverName?: string;
+    licensePlate?: string;
+    vin?: string;
+  }) => javaApi.post<Device>('/api/devices', data),
   update: (id: string, data: object) => javaApi.put<Device>(`/api/devices/${id}`, data),
   delete: (id: string) => javaApi.delete(`/api/devices/${id}`),
-  stats: () => javaApi.get<{ total: number; online: number; offline: number }>('/api/devices/stats'),
+  stats: () =>
+    javaApi.get<{ total: number; online: number; offline: number }>('/api/devices/stats'),
   telemetry: (id: string) => javaApi.get<TelemetryEvent[]>(`/api/devices/${id}/telemetry`),
 };
 
 // ── Alerts ────────────────────────────────────────────────────────────────────
 export const alerts = {
-  list: (page = 0, size = 20) => javaApi.get<PageResponse<Alert>>(`/api/alerts?page=${page}&size=${size}`),
+  list: (page = 0, size = 20) =>
+    javaApi.get<PageResponse<Alert>>(`/api/alerts?page=${page}&size=${size}`),
   unacknowledged: () => javaApi.get<Alert[]>('/api/alerts/unacknowledged'),
   count: () => javaApi.get<{ count: number }>('/api/alerts/count'),
   acknowledge: (id: string) => javaApi.post<Alert>(`/api/alerts/${id}/acknowledge`),
@@ -156,7 +166,10 @@ export const alerts = {
 
 // ── Tenant ────────────────────────────────────────────────────────────────────
 export const tenant = {
-  me: () => javaApi.get<{ tenant: Tenant; stats: { deviceCount: number; userCount: number } }>('/api/tenants/me'),
+  me: () =>
+    javaApi.get<{ tenant: Tenant; stats: { deviceCount: number; userCount: number } }>(
+      '/api/tenants/me'
+    ),
   update: (data: { name?: string; logoUrl?: string; primaryColor?: string }) =>
     javaApi.put<Tenant>('/api/tenants/me', data),
   users: () => javaApi.get('/api/users'),

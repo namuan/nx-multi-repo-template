@@ -5,7 +5,16 @@
       "Bash(docker compose:*)",
       "Bash(pnpm:*)",
       "Bash(docker exec:*)",
-      "Bash(pnpm info:*)"
+      "Bash(pnpm info:*)",
+      "Bash(xargs ls:*)",
+      "Bash(curl:*)",
+      "Bash(tmux list-sessions:*)",
+      "Bash(tmux list-windows:*)",
+      "Bash(tmux list-panes:*)",
+      "Bash(tmux capture-pane:*)",
+      "Bash(tmux send-keys:*)",
+      "Bash(python3:*)",
+      "Bash(ls:*)"
     ]
   }
 }

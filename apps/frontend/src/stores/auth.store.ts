@@ -27,14 +27,17 @@ export const useAuthStore = create<AuthState>()(
 
       logout: () => {
         localStorage.removeItem('fleet_token');
-        localStorage.removeItem('fleet_user');
         fleetWs.disconnect();
         set({ token: null, user: null, isAuthenticated: false });
       },
     }),
     {
       name: 'fleet_auth',
-      partialize: (state) => ({ token: state.token, user: state.user, isAuthenticated: state.isAuthenticated }),
+      partialize: (state) => ({
+        token: state.token,
+        user: state.user,
+        isAuthenticated: state.isAuthenticated,
+      }),
       onRehydrateStorage: () => (state) => {
         if (state?.token) {
           localStorage.setItem('fleet_token', state.token);
