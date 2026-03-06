@@ -92,14 +92,6 @@
 
 ## Known Issues
 
-**Port Conflict in Environment Configuration:**
-
-- Issue: Both Go and Java APIs default to PORT 8080 in `.env`
-- Files: `.env` (lines 6, 12)
-- Impact: Services fail to start if both configured with defaults
-- Current workaround: Different ports in docker-compose (9101, 9102)
-- Fix approach: Use distinct env var names per service (GO_PORT, JAVA_PORT)
-
 **WebSocket Hub Potential Race Condition:**
 
 - Issue: `hub.go` releases RLock before iterating over room clients
@@ -107,20 +99,6 @@
 - Impact: Concurrent unregister could cause nil pointer during broadcast
 - Current mitigation: Drop message for slow clients prevents blocking
 - Fix approach: Copy room map under read lock before iteration
-
-**Java Entity/Service Mismatch (Critical):**
-
-- Issue: AuthService and AuditLogService reference methods that don't exist on entity classes
-- Files: `apps/api-java/src/main/java/com/example/fleet/service/AuthService.java`, `apps/api-java/src/main/java/com/example/fleet/service/AuditLogService.java`
-- Impact: Application will not compile/run; runtime errors
-- Fix approach: Add missing getter/setter methods to User, Tenant, and AuditLog entities
-
-**Vite Configuration Type Error:**
-
-- Issue: Test configuration in vite.config.ts uses incorrect type
-- Files: `apps/frontend/vite.config.ts` (line 26)
-- Impact: TypeScript errors; may affect test execution
-- Fix approach: Fix type for test configuration
 
 ---
 
