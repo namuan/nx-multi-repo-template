@@ -14,7 +14,12 @@
       "Bash(tmux capture-pane:*)",
       "Bash(tmux send-keys:*)",
       "Bash(python3:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(go build:*)",
+      "Bash(go vet:*)",
+      "Bash(go work:*)",
+      "Bash(GOWORK=off golangci-lint run:*)",
+      "Bash(golangci-lint cache:*)"
     ]
   }
 }

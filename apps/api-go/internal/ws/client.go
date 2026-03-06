@@ -7,6 +7,8 @@ import (
 	"time"
 
 	"github.com/gorilla/websocket"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/codes"
 )
 
 const (
@@ -35,11 +37,16 @@ type Client struct {
 
 // ServeWS upgrades an HTTP request to a tenant-scoped WebSocket connection.
 func ServeWS(hub *Hub, tenantID string, w http.ResponseWriter, r *http.Request) {
+	_, span := otel.Tracer("api-go").Start(r.Context(), "ws.upgrade")
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
+		span.RecordError(err)
+		span.SetStatus(codes.Error, "ws upgrade failed")
+		span.End()
 		slog.Error("ws upgrade failed", "error", err)
 		return
 	}
+	span.End()
 
 	client := &Client{
 		hub:      hub,

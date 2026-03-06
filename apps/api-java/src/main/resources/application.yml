@@ -1,6 +1,6 @@
 spring:
   application:
-    name: fleet-manager
+    name: api-java
   datasource:
     url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/fleet_db}
     username: ${SPRING_DATASOURCE_USERNAME:fleet_user}
@@ -37,6 +37,12 @@ management:
     export:
       prometheus:
         enabled: true
+  tracing:
+    sampling:
+      probability: 1.0
+  otlp:
+    tracing:
+      endpoint: '${OTEL_EXPORTER_OTLP_ENDPOINT:http://localhost:4318}/v1/traces'
 
 fleet:
   jwt:

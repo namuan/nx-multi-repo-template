@@ -16,8 +16,10 @@ import (
 	"github.com/nx-polyglot/api-go/internal/db"
 	"github.com/nx-polyglot/api-go/internal/ratelimit"
 	"github.com/nx-polyglot/api-go/internal/telemetry"
+	"github.com/nx-polyglot/api-go/internal/tracing"
 	"github.com/nx-polyglot/api-go/internal/ws"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 )
 
 func main() {
@@ -25,6 +27,19 @@ func main() {
 	slog.SetDefault(logger)
 
 	cfg := config.Load()
+
+	shutdownTracing, err := tracing.Init(context.Background(), "api-go")
+	if err != nil {
+		slog.Error("tracing init failed", "error", err)
+		os.Exit(1)
+	}
+	defer func() {
+		tCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancel()
+		if tErr := shutdownTracing(tCtx); tErr != nil {
+			slog.Warn("tracing shutdown error", "error", tErr)
+		}
+	}()
 
 	database, err := db.Connect(cfg.DatabaseURL)
 	if err != nil {
@@ -74,7 +89,11 @@ func main() {
 		}),
 	)
 
-	handler := corsMiddleware(cfg.AllowedOrigin, mux)
+	handler := corsMiddleware(cfg.AllowedOrigin, otelhttp.NewHandler(mux, "api-go",
+		otelhttp.WithSpanNameFormatter(func(_ string, r *http.Request) string {
+			return r.Method + " " + r.URL.Path
+		}),
+	))
 
 	server := &http.Server{
 		Addr:              ":" + cfg.Port,

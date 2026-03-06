@@ -14,6 +14,8 @@ import (
 	"github.com/nx-polyglot/api-go/internal/auth"
 	"github.com/nx-polyglot/api-go/internal/ratelimit"
 	"github.com/nx-polyglot/api-go/internal/ws"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/codes"
 )
 
 // Handler ingests telemetry events, updates latest device state, and emits alerts.
@@ -76,8 +78,9 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	eventID := uuid.New().String()
 
+	dbCtx, dbSpan := otel.Tracer("api-go").Start(r.Context(), "db.insert_telemetry_event")
 	//nolint:gosec // Query uses positional placeholders and no dynamic SQL construction.
-	_, err = h.db.ExecContext(r.Context(), `
+	_, err = h.db.ExecContext(dbCtx, `
 		INSERT INTO telemetry_events
 		  (id, tenant_id, device_id, lat, lng, speed, heading, altitude, fuel_level, engine_temp, odometer, metadata, recorded_at)
 		VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)`,
@@ -87,25 +90,34 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		metaJSON, p.RecordedAt,
 	)
 	if err != nil {
+		dbSpan.RecordError(err)
+		dbSpan.SetStatus(codes.Error, "telemetry insert failed")
+		dbSpan.End()
 		slog.Error("telemetry insert failed", "error", err)
 		writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "storage error"})
 		return
 	}
+	dbSpan.End()
 
 	// Update device last-seen position
+	updateCtx, updateSpan := otel.Tracer("api-go").Start(r.Context(), "db.update_device_last_seen")
 	//nolint:gosec // Query uses positional placeholders and no dynamic SQL construction.
-	if _, err = h.db.ExecContext(r.Context(), `
+	if _, err = h.db.ExecContext(updateCtx, `
 		UPDATE devices
 		SET last_lat=$1, last_lng=$2, last_speed=$3, last_heading=$4, last_seen=$5, status='online', updated_at=now()
 		WHERE id=$6`,
 		p.Lat, p.Lng, p.Speed, p.Heading, p.RecordedAt, deviceID,
 	); err != nil {
+		updateSpan.RecordError(err)
+		updateSpan.SetStatus(codes.Error, "device update failed")
 		slog.Error("device latest-state update failed", "error", err)
 	}
+	updateSpan.End()
 
 	h.generateAlerts(r.Context(), tenantID, deviceID, p)
 
 	// Broadcast to WebSocket room
+	_, broadSpan := otel.Tracer("api-go").Start(r.Context(), "ws.broadcast_telemetry")
 	event := Event{
 		Type:     "telemetry",
 		DeviceID: deviceID,
@@ -118,10 +130,13 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 	payload, err := json.Marshal(event)
 	if err != nil {
+		broadSpan.RecordError(err)
+		broadSpan.SetStatus(codes.Error, "marshal failed")
 		slog.Error("telemetry event marshal failed", "error", err)
 	} else {
 		h.hub.BroadcastToTenant(tenantID, payload)
 	}
+	broadSpan.End()
 
 	writeJSON(w, http.StatusAccepted, map[string]string{"id": eventID, "status": "accepted"})
 }

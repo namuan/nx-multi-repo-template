@@ -64,9 +64,14 @@ services:
       DATABASE_URL: "${DATABASE_URL:-postgres://fleet_user:fleet_password@db:5432/fleet_db?sslmode=disable}"
       JWT_SECRET: "${JWT_SECRET:-fleet-super-secret-jwt-key-change-in-production}"
       ALLOWED_ORIGIN: "${ALLOWED_ORIGIN:-http://localhost:9100}"
+      OTEL_EXPORTER_OTLP_ENDPOINT: "${OTEL_EXPORTER_OTLP_ENDPOINT:-http://tempo:4318}"
+      OTEL_SERVICE_NAME: "api-go"
     depends_on:
       db-seed:
         condition: service_completed_successfully
+      tempo:
+        condition: service_started
+        required: false
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:8080/health || exit 1"]
       interval: 15s
@@ -89,9 +94,13 @@ services:
       JWT_SECRET: "${JWT_SECRET:-fleet-super-secret-jwt-key-change-in-production}"
       JWT_EXPIRATION_MS: "${JWT_EXPIRATION_MS:-86400000}"
       ALLOWED_ORIGIN: "${ALLOWED_ORIGIN:-http://localhost:9100}"
+      OTEL_EXPORTER_OTLP_ENDPOINT: "${OTEL_EXPORTER_OTLP_ENDPOINT:-http://tempo:4318}"
     depends_on:
       db-seed:
         condition: service_completed_successfully
+      tempo:
+        condition: service_started
+        required: false
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:8080/actuator/health || exit 1"]
       interval: 15s
@@ -152,6 +161,22 @@ services:
     depends_on:
       prometheus:
         condition: service_started
+      tempo:
+        condition: service_started
+    profiles:
+      - observability
+
+  # ─── Tempo (distributed tracing) ───────────────────────────────────────────
+  tempo:
+    image: grafana/tempo:2.6.1
+    command: ["-config.file=/etc/tempo.yml"]
+    ports:
+      - "${TEMPO_PORT_HTTP:-3200}:3200"
+      - "${TEMPO_PORT_OTLP_GRPC:-4317}:4317"
+      - "${TEMPO_PORT_OTLP_HTTP:-4318}:4318"
+    volumes:
+      - ./tools/observability/tempo/tempo.yml:/etc/tempo.yml:ro
+      - tempo_data:/var/tempo
     profiles:
       - observability
 
@@ -173,3 +198,4 @@ volumes:
   postgres_data:
   prometheus_data:
   grafana_data:
+  tempo_data:

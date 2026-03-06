@@ -81,13 +81,6 @@
 - Impact: Data loss risk; no confidence in recovery capability
 - Fix approach: Document backup strategy; implement periodic restore drills
 
-**No Contract Testing Between Services:**
-
-- Issue: Java and Go APIs may drift in payload schemas without detection
-- Files: `apps/api-java/`, `apps/api-go/`
-- Impact: Integration failures in production
-- Fix approach: Implement Pact or OpenAPI contract tests
-
 ---
 
 ## Known Issues
