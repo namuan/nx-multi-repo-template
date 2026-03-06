@@ -10,7 +10,7 @@ service:
   port: 8080
 
 env:
-  - name: PORT
+  - name: GO_PORT
     value: '8080'
   - name: ALLOWED_ORIGIN
     value: 'https://frontend.example.com'

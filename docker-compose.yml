@@ -60,7 +60,7 @@ services:
     ports:
       - "${API_GO_PORT:-9101}:8080"
     environment:
-      PORT: "${GO_PORT:-8080}"
+      GO_PORT: "${GO_PORT:-8080}"
       DATABASE_URL: "${DATABASE_URL:-postgres://fleet_user:fleet_password@db:5432/fleet_db?sslmode=disable}"
       JWT_SECRET: "${JWT_SECRET:-fleet-super-secret-jwt-key-change-in-production}"
       ALLOWED_ORIGIN: "${ALLOWED_ORIGIN:-http://localhost:9100}"
@@ -82,7 +82,7 @@ services:
     ports:
       - "${API_JAVA_PORT:-9102}:8080"
     environment:
-      SERVER_PORT: "${SERVER_PORT:-8080}"
+      JAVA_PORT: "${JAVA_PORT:-8080}"
       SPRING_DATASOURCE_URL: "${SPRING_DATASOURCE_URL:-jdbc:postgresql://db:5432/fleet_db}"
       SPRING_DATASOURCE_USERNAME: "${SPRING_DATASOURCE_USERNAME:-fleet_user}"
       SPRING_DATASOURCE_PASSWORD: "${SPRING_DATASOURCE_PASSWORD:-fleet_password}"

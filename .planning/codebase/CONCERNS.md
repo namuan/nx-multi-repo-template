@@ -108,13 +108,6 @@
 - Current mitigation: Drop message for slow clients prevents blocking
 - Fix approach: Copy room map under read lock before iteration
 
-**Go Version Mismatch:**
-
-- Issue: `go.work` requires Go >= 1.25.7 but running 1.25.5
-- Files: `apps/api-go/go.mod`, `go.work`
-- Impact: Build failures in local environment
-- Fix approach: Upgrade Go installation or adjust go.work version requirement
-
 **Java Entity/Service Mismatch (Critical):**
 
 - Issue: AuthService and AuditLogService reference methods that don't exist on entity classes

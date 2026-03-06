@@ -10,7 +10,7 @@ service:
   port: 8080
 
 env:
-  - name: SERVER_PORT
+  - name: JAVA_PORT
     value: '8080'
 
 ingress:

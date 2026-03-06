@@ -20,7 +20,7 @@ spring:
         format_sql: true
 
 server:
-  port: ${SERVER_PORT:8080}
+  port: ${JAVA_PORT:${SERVER_PORT:8080}}
   error:
     include-message: always
     include-binding-errors: always
@@ -50,4 +50,4 @@ logging:
     com.example.fleet: INFO
     org.springframework.security: WARN
   pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    console: '%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n'

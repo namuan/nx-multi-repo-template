@@ -18,7 +18,7 @@
         "command": "go run .",
         "cwd": "apps/api-go",
         "env": {
-          "PORT": "9101"
+          "GO_PORT": "9101"
         }
       }
     },
