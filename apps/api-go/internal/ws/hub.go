@@ -59,11 +59,7 @@ func (h *Hub) Run() {
 			slog.Info("ws client unregistered", "tenant", client.tenantID)
 
 		case msg := <-h.broadcast:
-			h.mu.RLock()
-			room := h.rooms[msg.tenantID]
-			h.mu.RUnlock()
-
-			for client := range room {
+			for _, client := range h.snapshotRoomClients(msg.tenantID) {
 				select {
 				case client.send <- msg.payload:
 				default:
@@ -78,4 +74,17 @@ func (h *Hub) Run() {
 // BroadcastToTenant sends a JSON payload to all WebSocket clients in a tenant room.
 func (h *Hub) BroadcastToTenant(tenantID string, payload []byte) {
 	h.broadcast <- tenantMessage{tenantID: tenantID, payload: payload}
+}
+
+func (h *Hub) snapshotRoomClients(tenantID string) []*Client {
+	h.mu.RLock()
+	defer h.mu.RUnlock()
+
+	room := h.rooms[tenantID]
+	clients := make([]*Client, 0, len(room))
+	for client := range room {
+		clients = append(clients, client)
+	}
+
+	return clients
 }

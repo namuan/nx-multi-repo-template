@@ -5,6 +5,7 @@ node_modules/
 dist/
 coverage/
 tmp/
+.cache/
 .nx/cache/
 .nx/workspace-data/
 
