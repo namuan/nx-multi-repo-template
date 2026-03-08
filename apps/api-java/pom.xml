@@ -27,7 +27,7 @@
     <pmd.version>7.18.0</pmd.version>
     <spotbugs.maven.plugin.version>4.9.8.2</spotbugs.maven.plugin.version>
     <spotbugs.version>4.9.8</spotbugs.version>
-    <findsecbugs.version>1.13.0</findsecbugs.version>
+    <findsecbugs.version>1.14.0</findsecbugs.version>
     <sb.contrib.version>7.6.4</sb.contrib.version>
     <maven.compiler.plugin.version>3.14.0</maven.compiler.plugin.version>
     <errorprone.version>2.43.0</errorprone.version>
