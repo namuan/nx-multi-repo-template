@@ -1,6 +1,11 @@
 {
   "name": "nx-polyglot-monorepo",
   "private": true,
+  "overrides": {
+    "minimatch@>=10.0.0 <10.2.3": "10.2.4",
+    "koa@>=3.0.0 <3.1.2": "3.1.2",
+    "serialize-javascript@<=7.0.2": "7.0.3"
+  },
   "scripts": {
     "nx": "nx",
     "prepare": "lefthook install",
@@ -53,13 +58,6 @@
     "test:e2e:frontend:ci": "nx run frontend-e2e:e2e --configuration=ci",
     "dev:tmux": "npm run check -- --tmux && tools/tmux/fleet-dev.sh"
   },
-  "pnpm": {
-    "overrides": {
-      "minimatch@>=10.0.0 <10.2.3": "10.2.4",
-      "koa@>=3.0.0 <3.1.2": "3.1.2",
-      "serialize-javascript@<=7.0.2": "7.0.3"
-    }
-  },
   "devDependencies": {
     "@nx-tools/nx-container": "7.2.1",
     "@nx/eslint": "22.5.3",
@@ -87,5 +85,6 @@
     "typescript": "~5.7.0",
     "vite": "7.3.1",
     "vitest": "4.0.18"
-  }
+  },
+  "packageManager": "pnpm@11.17.0+sha512.cca3cea332ad254bb84145f966d19f4879615210346fc92c79a047f23a0d7b3cca3c3792f0076ba1f1831d277efbcf0a9119b31a9a60eca7fb3d6231f331ef72"
 }
