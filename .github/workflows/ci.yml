@@ -119,7 +119,7 @@ jobs:
 
       - name: Comment backend e2e report
         if: always() && github.event_name == 'pull_request'
-        uses: marocchino/sticky-pull-request-comment@v2
+        uses: marocchino/sticky-pull-request-comment@v3
         with:
           header: api-e2e-report
           message: |
@@ -173,7 +173,7 @@ jobs:
 
       - name: Comment frontend e2e report
         if: always() && github.event_name == 'pull_request'
-        uses: marocchino/sticky-pull-request-comment@v2
+        uses: marocchino/sticky-pull-request-comment@v3
         with:
           header: frontend-e2e-report
           message: |
