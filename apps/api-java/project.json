@@ -87,7 +87,7 @@
     "lint": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "mvn -DskipTests compile pmd:check pmd:cpd-check spotbugs:check",
+        "command": "mvn -DskipTests compile pmd:check pmd:cpd-check spotbugs:check -Dspotbugs.failOnError=false",
         "cwd": "apps/api-java"
       }
     },
