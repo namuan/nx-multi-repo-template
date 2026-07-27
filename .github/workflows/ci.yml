@@ -154,6 +154,9 @@ jobs:
       - name: Install Node dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps chromium
+
       - name: Run frontend UI e2e
         id: run_frontend_e2e
         continue-on-error: true
