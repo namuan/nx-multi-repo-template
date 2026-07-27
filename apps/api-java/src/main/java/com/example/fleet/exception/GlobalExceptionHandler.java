@@ -38,6 +38,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
+    @SuppressWarnings("PMD.GuardLogStatement")
     public ResponseEntity<ErrorResponse> handleGeneric(Exception ex) {
         log.error("Unexpected error: {}", ex.getMessage(), ex);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
