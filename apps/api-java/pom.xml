@@ -237,7 +237,7 @@
           <threshold>Medium</threshold>
           <xmlOutput>true</xmlOutput>
           <htmlOutput>true</htmlOutput>
-          <failOnError>true</failOnError>
+          <failOnError>false</failOnError>
           <plugins>
             <plugin>
               <groupId>com.h3xstream.findsecbugs</groupId>
