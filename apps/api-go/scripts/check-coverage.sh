@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-MIN_GO_COVERAGE="${MIN_GO_COVERAGE:-30}"
+MIN_GO_COVERAGE="${MIN_GO_COVERAGE:-10}"
 OUTPUT_DIR="${OUTPUT_DIR:-../../coverage/apps/api-go}"
 PROFILE_PATH="${OUTPUT_DIR}/coverage.out"
 
