@@ -1,27 +1,33 @@
-package com.example.fleet.service;
+package com.example.fleet.action;
 
 import com.example.fleet.domain.entity.Alert;
 import com.example.fleet.domain.entity.AlertRule;
 import com.example.fleet.dto.request.CreateAlertRuleRequest;
 import com.example.fleet.repository.AlertRepository;
 import com.example.fleet.repository.AlertRuleRepository;
+import com.example.fleet.service.AuditLogService;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 
-@Service
-public class AlertService {
+/**
+ * Orchestration for alert flows: owns the acknowledge state transition (with idempotency), tenant
+ * scoping, rule lifecycle decisions, and failure classification. Reusable mechanics (audit
+ * recording) are delegated to services.
+ */
+@Component
+public class AlertActions {
 
     private final AlertRepository alertRepo;
     private final AlertRuleRepository ruleRepo;
     private final AuditLogService auditLog;
 
-    public AlertService(
+    public AlertActions(
             AlertRepository alertRepo, AlertRuleRepository ruleRepo, AuditLogService auditLog) {
         this.alertRepo = alertRepo;
         this.ruleRepo = ruleRepo;
@@ -61,14 +67,7 @@ public class AlertService {
         alert = alertRepo.save(alert);
 
         auditLog.record(
-                tenantId,
-                actorId,
-                actorEmail,
-                "ALERT_ACKNOWLEDGED",
-                "alert",
-                alertId.toString(),
-                null,
-                null);
+                tenantId, actorId, actorEmail, "ALERT_ACKNOWLEDGED", "alert", alertId.toString());
         return alert;
     }
 
@@ -94,9 +93,7 @@ public class AlertService {
                 actorEmail,
                 "ALERT_RULE_CREATED",
                 "alert_rule",
-                rule.getId().toString(),
-                null,
-                null);
+                rule.getId().toString());
         return rule;
     }
 
@@ -116,9 +113,7 @@ public class AlertService {
                 actorEmail,
                 active ? "ALERT_RULE_ENABLED" : "ALERT_RULE_DISABLED",
                 "alert_rule",
-                ruleId.toString(),
-                null,
-                null);
+                ruleId.toString());
         return rule;
     }
 
@@ -136,8 +131,6 @@ public class AlertService {
                 actorEmail,
                 "ALERT_RULE_DELETED",
                 "alert_rule",
-                ruleId.toString(),
-                null,
-                null);
+                ruleId.toString());
     }
 }

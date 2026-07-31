@@ -1,20 +1,26 @@
-package com.example.fleet.service;
+package com.example.fleet.action;
 
 import com.example.fleet.domain.entity.Device;
 import com.example.fleet.domain.entity.Tenant;
 import com.example.fleet.dto.request.CreateDeviceRequest;
 import com.example.fleet.repository.DeviceRepository;
 import com.example.fleet.repository.TenantRepository;
+import com.example.fleet.service.AuditLogService;
 import java.security.SecureRandom;
 import java.util.HexFormat;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 
-@Service
-public class DeviceService {
+/**
+ * Orchestration for device flows: owns the device-limit business rule, tenant-scoped ownership
+ * checks, state transitions, and failure classification. Reusable mechanics (audit recording, API
+ * key generation) are delegated to services.
+ */
+@Component
+public class DeviceActions {
 
     private static final SecureRandom API_KEY_RANDOM = new SecureRandom();
 
@@ -22,7 +28,7 @@ public class DeviceService {
     private final TenantRepository tenantRepo;
     private final AuditLogService auditLog;
 
-    public DeviceService(
+    public DeviceActions(
             DeviceRepository deviceRepo, TenantRepository tenantRepo, AuditLogService auditLog) {
         this.deviceRepo = deviceRepo;
         this.tenantRepo = tenantRepo;
@@ -69,9 +75,7 @@ public class DeviceService {
                 actorEmail,
                 "DEVICE_CREATED",
                 "device",
-                device.getId().toString(),
-                null,
-                null);
+                device.getId().toString());
         return device;
     }
 
@@ -89,14 +93,7 @@ public class DeviceService {
         if (req.vin() != null) device.setVin(req.vin());
         device = deviceRepo.save(device);
         auditLog.record(
-                tenantId,
-                actorId,
-                actorEmail,
-                "DEVICE_UPDATED",
-                "device",
-                deviceId.toString(),
-                null,
-                null);
+                tenantId, actorId, actorEmail, "DEVICE_UPDATED", "device", deviceId.toString());
         return device;
     }
 
@@ -104,14 +101,7 @@ public class DeviceService {
         Device device = getDevice(tenantId, deviceId);
         deviceRepo.delete(device);
         auditLog.record(
-                tenantId,
-                actorId,
-                actorEmail,
-                "DEVICE_DELETED",
-                "device",
-                deviceId.toString(),
-                null,
-                null);
+                tenantId, actorId, actorEmail, "DEVICE_DELETED", "device", deviceId.toString());
     }
 
     public DashboardStats getDashboardStats(UUID tenantId) {

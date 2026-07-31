@@ -38,6 +38,29 @@ public class AuditLogService {
         repo.save(log);
     }
 
+    /** Convenience overload: records an audit entry without details or IP address. */
+    public void record(
+            UUID tenantId,
+            UUID actorId,
+            String actorEmail,
+            String action,
+            String resourceType,
+            String resourceId) {
+        record(tenantId, actorId, actorEmail, action, resourceType, resourceId, null, null);
+    }
+
+    /** Convenience overload: records an audit entry with an IP address but no details. */
+    public void record(
+            UUID tenantId,
+            UUID actorId,
+            String actorEmail,
+            String action,
+            String resourceType,
+            String resourceId,
+            String ipAddress) {
+        record(tenantId, actorId, actorEmail, action, resourceType, resourceId, null, ipAddress);
+    }
+
     public Page<AuditLog> getAuditLogs(UUID tenantId, Pageable pageable) {
         return repo.findAllByTenantIdOrderByCreatedAtDesc(tenantId, pageable);
     }

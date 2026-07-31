@@ -1,31 +1,29 @@
 package com.example.fleet.controller;
 
+import com.example.fleet.action.TenantActions;
 import com.example.fleet.domain.entity.Tenant;
 import com.example.fleet.domain.entity.User;
 import com.example.fleet.dto.response.PageResponse;
 import com.example.fleet.repository.UserRepository;
 import com.example.fleet.security.TenantContext;
 import com.example.fleet.service.AuditLogService;
-import com.example.fleet.service.TenantService;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/api")
 public class TenantController {
 
-    private final TenantService tenantService;
+    private final TenantActions tenantActions;
     private final UserRepository userRepo;
     private final AuditLogService auditLog;
 
     public TenantController(
-            TenantService tenantService, UserRepository userRepo, AuditLogService auditLog) {
-        this.tenantService = tenantService;
+            TenantActions tenantActions, UserRepository userRepo, AuditLogService auditLog) {
+        this.tenantActions = tenantActions;
         this.userRepo = userRepo;
         this.auditLog = auditLog;
     }
@@ -34,8 +32,8 @@ public class TenantController {
     @GetMapping("/tenants/me")
     public ResponseEntity<TenantProfile> me() {
         TenantContext ctx = TenantContext.get();
-        Tenant t = tenantService.getTenant(ctx.tenantId());
-        TenantService.TenantStats stats = tenantService.getStats(ctx.tenantId());
+        Tenant t = tenantActions.getTenant(ctx.tenantId());
+        TenantActions.TenantStats stats = tenantActions.getStats(ctx.tenantId());
         return ResponseEntity.ok(new TenantProfile(t, stats));
     }
 
@@ -43,7 +41,7 @@ public class TenantController {
     public ResponseEntity<Tenant> updateMe(@RequestBody UpdateTenantRequest req) {
         TenantContext ctx = TenantContext.get();
         return ResponseEntity.ok(
-                tenantService.updateTenant(
+                tenantActions.updateTenant(
                         ctx.tenantId(),
                         req.name(),
                         req.logoUrl(),
@@ -74,26 +72,17 @@ public class TenantController {
     public ResponseEntity<PageResponse<Tenant>> listTenants(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
-        requirePlatformAdmin();
         return ResponseEntity.ok(
-                PageResponse.from(tenantService.listAllTenants(PageRequest.of(page, size))));
+                PageResponse.from(tenantActions.listAllTenants(PageRequest.of(page, size))));
     }
 
     @PostMapping("/admin/tenants/{id}/suspend")
     public ResponseEntity<Tenant> suspend(@PathVariable UUID id) {
-        requirePlatformAdmin();
         TenantContext ctx = TenantContext.get();
-        return ResponseEntity.ok(tenantService.suspendTenant(id, ctx.userId(), null));
+        return ResponseEntity.ok(tenantActions.suspendTenant(id, ctx.userId(), null));
     }
 
-    private void requirePlatformAdmin() {
-        if (!TenantContext.get().isPlatformAdmin()) {
-            throw new ResponseStatusException(
-                    HttpStatus.FORBIDDEN, "Platform admin access required");
-        }
-    }
-
-    record TenantProfile(Tenant tenant, TenantService.TenantStats stats) {}
+    record TenantProfile(Tenant tenant, TenantActions.TenantStats stats) {}
 
     record UpdateTenantRequest(String name, String logoUrl, String primaryColor) {}
 }

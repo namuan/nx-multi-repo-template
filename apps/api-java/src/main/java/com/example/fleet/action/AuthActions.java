@@ -1,4 +1,4 @@
-package com.example.fleet.service;
+package com.example.fleet.action;
 
 import com.example.fleet.domain.entity.Tenant;
 import com.example.fleet.domain.entity.User;
@@ -8,15 +8,21 @@ import com.example.fleet.dto.response.LoginResponse;
 import com.example.fleet.repository.TenantRepository;
 import com.example.fleet.repository.UserRepository;
 import com.example.fleet.security.JwtUtil;
+import com.example.fleet.service.AuditLogService;
 import java.time.Instant;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-@Service
-public class AuthService {
+/**
+ * Orchestration for authentication flows: owns credential validation, tenant suspension policy,
+ * uniqueness rules, and failure classification. Reusable mechanics (audit recording, session
+ * construction) are delegated to services.
+ */
+@Component
+public class AuthActions {
 
     private final UserRepository userRepo;
     private final TenantRepository tenantRepo;
@@ -24,7 +30,7 @@ public class AuthService {
     private final JwtUtil jwtUtil;
     private final AuditLogService auditLog;
 
-    public AuthService(
+    public AuthActions(
             UserRepository userRepo,
             TenantRepository tenantRepo,
             PasswordEncoder passwordEncoder,
@@ -75,20 +81,9 @@ public class AuthService {
                 "AUTH_LOGIN",
                 "user",
                 user.getId().toString(),
-                null,
                 ipAddress);
 
-        return new LoginResponse(
-                token,
-                user.getId().toString(),
-                user.getEmail(),
-                user.getFullName(),
-                user.getRole(),
-                user.isPlatformAdmin(),
-                tenant.getId().toString(),
-                tenant.getName(),
-                tenant.getPrimaryColor(),
-                tenant.getLogoUrl());
+        return LoginResponse.of(token, user, tenant);
     }
 
     @Transactional
@@ -123,19 +118,8 @@ public class AuthService {
                 "TENANT_REGISTERED",
                 "tenant",
                 tenant.getId().toString(),
-                null,
                 ipAddress);
 
-        return new LoginResponse(
-                token,
-                admin.getId().toString(),
-                admin.getEmail(),
-                admin.getFullName(),
-                admin.getRole(),
-                false,
-                tenant.getId().toString(),
-                tenant.getName(),
-                tenant.getPrimaryColor(),
-                tenant.getLogoUrl());
+        return LoginResponse.of(token, admin, tenant);
     }
 }
