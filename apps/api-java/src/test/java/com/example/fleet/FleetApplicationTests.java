@@ -1,13 +1,12 @@
-package com.example.apijava;
+package com.example.fleet;
 
-import com.example.fleet.FleetApplication;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(classes = FleetApplication.class)
 @ActiveProfiles("test")
-class ApiJavaApplicationTests {
+class FleetApplicationTests {
 
     @Test
     void contextLoads() {
