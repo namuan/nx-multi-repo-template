@@ -76,8 +76,8 @@ importers:
         specifier: 22.7.10
         version: 22.7.10(@babel/traverse@7.29.7(supports-color@7.2.0))(nx@22.7.10)(supports-color@7.2.0)
       '@nx/maven':
-        specifier: 22.7.10
-        version: 22.7.10(nx@22.7.10)
+        specifier: 23.1.2
+        version: 23.1.2(nx@22.7.10)
       '@nx/playwright':
         specifier: 22.7.10
         version: 22.7.10(@babel/traverse@7.29.7(supports-color@7.2.0))(@playwright/test@1.58.2)(@zkochan/js-yaml@0.0.7)(eslint@9.39.3(jiti@2.4.2)(supports-color@7.2.0))(nx@22.7.10)(supports-color@7.2.0)
@@ -1346,6 +1346,11 @@ packages:
     peerDependencies:
       nx: ^22.7.10
 
+  '@nx/devkit@23.1.2':
+    resolution: {integrity: sha512-NBk4cWde0QKnNfomA0lSHPadDVyqA0Cu8/vVy7crCO6Dk0FIrati9pZXuj3TQzfFJLWuZ/XzJpzuIkOovYrFGA==}
+    peerDependencies:
+      nx: ^22.7.10
+
   '@nx/eslint@22.7.10':
     resolution: {integrity: sha512-84RZhpLSoseZVnhwiYsQo1nxwmBrlbh7k3/pwTGgv1fdz1fHcSUrjNlRAb0ovoaoi/hw5DEURTS3FpECH92RzQ==}
     peerDependencies:
@@ -1366,8 +1371,8 @@ packages:
       verdaccio:
         optional: true
 
-  '@nx/maven@22.7.10':
-    resolution: {integrity: sha512-EhJ8Dyu0xuug4PV8t/4AWoz0SR4MTydXBYVv5xI7y2zwReuRzW2051AvFUpn0Gey5lFhBycKsFHLfuYJXrXs3Q==}
+  '@nx/maven@23.1.2':
+    resolution: {integrity: sha512-HfqhW5lNmBVEBpJY2leOX3c7HSWcBQ3mAdrfiglZfVjA/f6581u8LgdbOlHwemhPczBYQPiZwUSX/m1BP3SOOw==}
 
   '@nx/module-federation@22.7.10':
     resolution: {integrity: sha512-9yp7LVGpqULE+52Opd3n92kak8+X37HFLVRgLUyKtbT0eZnxC0MbcuTsm9KOgrYrE3YSweuTTBIkHA8XWOke4w==}
@@ -4097,6 +4102,11 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
+  semver@7.8.6:
+    resolution: {integrity: sha512-9lpSSU4Mly3mrtruwLs1eLK6+gzbzqeBFwRNjIjE+9LuDpWdYctrQlQ3ej1Ilgi7gknpsTRnPoLP8DpCHqHIJw==}
+    engines: {node: '>=10'}
+    hasBin: true
+
   send@0.19.2:
     resolution: {integrity: sha512-VMbMxbDeehAxpOtWJXlcUS5E8iXh6QmN+BkRX1GARS3wRaXEEgzCcB10gTQazO42tpNIya8xIyNx8fll1OFPrg==}
     engines: {node: '>= 0.8.0'}
@@ -4329,6 +4339,9 @@ packages:
 
   tslib@2.8.1:
     resolution: {integrity: sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==}
+
+  tslib@2.9.1:
+    resolution: {integrity: sha512-a4Ux9VKuIMHsOS7ENbEq6hK2ZGYIT27Rtl0E4eD9KqwxhKiQeMZE/9xb3IdYwWaSOyIBQLExhQgXDTYoiCxnWA==}
 
   tsscmp@1.0.6:
     resolution: {integrity: sha512-LxhtAkPDTkVCMQjt2h6eBVY28KCjikZqZfMcC15YBeNjkgUpdCfBu5HoiOTDu86v6smE8yOjyEktJ8hlbANHQA==}
@@ -5513,7 +5526,7 @@ snapshots:
   '@emnapi/core@1.8.1':
     dependencies:
       '@emnapi/wasi-threads': 1.1.0
-      tslib: 2.8.1
+      tslib: 2.9.1
 
   '@emnapi/runtime@1.4.5':
     dependencies:
@@ -5521,7 +5534,7 @@ snapshots:
 
   '@emnapi/runtime@1.8.1':
     dependencies:
-      tslib: 2.8.1
+      tslib: 2.9.1
 
   '@emnapi/wasi-threads@1.0.4':
     dependencies:
@@ -5529,7 +5542,7 @@ snapshots:
 
   '@emnapi/wasi-threads@1.1.0':
     dependencies:
-      tslib: 2.8.1
+      tslib: 2.9.1
 
   '@esbuild/aix-ppc64@0.28.1':
     optional: true
@@ -6089,8 +6102,18 @@ snapshots:
       enquirer: 2.3.6
       minimatch: 11.0.4
       nx: 22.7.10
-      semver: 7.7.4
-      tslib: 2.8.1
+      semver: 7.8.6
+      tslib: 2.9.1
+      yargs-parser: 21.1.1
+
+  '@nx/devkit@23.1.2(nx@22.7.10)':
+    dependencies:
+      ejs: 5.0.1
+      enquirer: 2.3.6
+      minimatch: 11.0.4
+      nx: 22.7.10
+      semver: 7.8.6
+      tslib: 2.9.1
       yargs-parser: 21.1.1
 
   '@nx/eslint@22.7.10(@babel/traverse@7.29.7(supports-color@7.2.0))(@zkochan/js-yaml@0.0.7)(eslint@9.39.3(jiti@2.4.2)(supports-color@7.2.0))(nx@22.7.10)(supports-color@7.2.0)':
@@ -6146,12 +6169,11 @@ snapshots:
       - nx
       - supports-color
 
-  '@nx/maven@22.7.10(nx@22.7.10)':
+  '@nx/maven@23.1.2(nx@22.7.10)':
     dependencies:
-      '@nx/devkit': 22.7.10(nx@22.7.10)
+      '@nx/devkit': 23.1.2(nx@22.7.10)
       '@xmldom/xmldom': 0.8.15
-      tree-kill: 1.2.2
-      tslib: 2.8.1
+      tslib: 2.9.1
     transitivePeerDependencies:
       - nx
 
@@ -6167,7 +6189,7 @@ snapshots:
       express: 4.22.1(supports-color@7.2.0)
       http-proxy-middleware: 3.0.7(supports-color@7.2.0)
       picocolors: 1.1.1
-      tslib: 2.8.1
+      tslib: 2.9.1
       webpack: 5.105.3(esbuild@0.28.1)(uglify-js@3.19.3)
     transitivePeerDependencies:
       - '@babel/traverse'
@@ -6300,7 +6322,7 @@ snapshots:
       '@rollup/plugin-image': 3.0.3(rollup@4.59.0)
       '@rollup/plugin-json': 6.1.0(rollup@4.59.0)
       '@rollup/plugin-node-resolve': 15.3.1(rollup@4.59.0)
-      '@rollup/plugin-typescript': 12.3.0(rollup@4.59.0)(tslib@2.8.1)(typescript@5.7.3)
+      '@rollup/plugin-typescript': 12.3.0(rollup@4.59.0)(tslib@2.9.1)(typescript@5.7.3)
       autoprefixer: 10.4.27(postcss@8.5.23)
       concat-with-sourcemaps: 1.1.0
       picocolors: 1.1.1
@@ -6309,7 +6331,7 @@ snapshots:
       postcss-modules: 6.0.1(postcss@8.5.23)
       rollup: 4.59.0
       rollup-plugin-typescript2: 0.36.0(rollup@4.59.0)(typescript@5.7.3)
-      tslib: 2.8.1
+      tslib: 2.9.1
     transitivePeerDependencies:
       - '@babel/core'
       - '@babel/traverse'
@@ -6372,7 +6394,7 @@ snapshots:
       detect-port: 2.1.0
       http-server: 14.1.1(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
       picocolors: 1.1.1
-      tslib: 2.8.1
+      tslib: 2.9.1
     optionalDependencies:
       '@nx/eslint': 22.7.10(@babel/traverse@7.29.7(supports-color@7.2.0))(@zkochan/js-yaml@0.0.7)(eslint@9.39.3(jiti@2.4.2)(supports-color@7.2.0))(nx@22.7.10)(supports-color@7.2.0)
       '@nx/playwright': 22.7.10(@babel/traverse@7.29.7(supports-color@7.2.0))(@playwright/test@1.58.2)(@zkochan/js-yaml@0.0.7)(eslint@9.39.3(jiti@2.4.2)(supports-color@7.2.0))(nx@22.7.10)(supports-color@7.2.0)
@@ -6538,14 +6560,14 @@ snapshots:
     optionalDependencies:
       rollup: 4.59.0
 
-  '@rollup/plugin-typescript@12.3.0(rollup@4.59.0)(tslib@2.8.1)(typescript@5.7.3)':
+  '@rollup/plugin-typescript@12.3.0(rollup@4.59.0)(tslib@2.9.1)(typescript@5.7.3)':
     dependencies:
       '@rollup/pluginutils': 5.3.0(rollup@4.59.0)
       resolve: 1.22.11
       typescript: 5.7.3
     optionalDependencies:
       rollup: 4.59.0
-      tslib: 2.8.1
+      tslib: 2.9.1
 
   '@rollup/pluginutils@4.2.1':
     dependencies:
@@ -6815,7 +6837,7 @@ snapshots:
 
   '@tybys/wasm-util@0.10.1':
     dependencies:
-      tslib: 2.8.1
+      tslib: 2.9.1
     optional: true
 
   '@tybys/wasm-util@0.9.0':
@@ -7683,7 +7705,7 @@ snapshots:
   dot-case@3.0.4:
     dependencies:
       no-case: 3.0.4
-      tslib: 2.8.1
+      tslib: 2.9.1
 
   dotenv-expand@12.0.3:
     dependencies:
@@ -8521,7 +8543,7 @@ snapshots:
 
   lower-case@2.0.2:
     dependencies:
-      tslib: 2.8.1
+      tslib: 2.9.1
 
   lru-cache@11.2.6: {}
 
@@ -8553,7 +8575,7 @@ snapshots:
 
   make-dir@4.0.0:
     dependencies:
-      semver: 7.7.4
+      semver: 7.8.6
 
   math-intrinsics@1.1.0: {}
 
@@ -8632,7 +8654,7 @@ snapshots:
   no-case@3.0.4:
     dependencies:
       lower-case: 2.0.2
-      tslib: 2.8.1
+      tslib: 2.9.1
 
   node-fetch@2.7.0(encoding@0.1.13):
     dependencies:
@@ -9132,7 +9154,7 @@ snapshots:
       fs-extra: 10.1.0
       rollup: 4.59.0
       semver: 7.7.4
-      tslib: 2.8.1
+      tslib: 2.9.1
       typescript: 5.7.3
 
   rollup@4.59.0:
@@ -9194,6 +9216,8 @@ snapshots:
   semver@7.6.3: {}
 
   semver@7.7.4: {}
+
+  semver@7.8.6: {}
 
   send@0.19.2(supports-color@7.2.0):
     dependencies:
@@ -9269,7 +9293,7 @@ snapshots:
   snake-case@3.0.4:
     dependencies:
       dot-case: 3.0.4
-      tslib: 2.8.1
+      tslib: 2.9.1
 
   sorted-array-functions@1.3.0: {}
 
@@ -9430,6 +9454,8 @@ snapshots:
       strip-bom: 3.0.0
 
   tslib@2.8.1: {}
+
+  tslib@2.9.1: {}
 
   tsscmp@1.0.6: {}
 

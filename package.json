@@ -57,7 +57,7 @@
     "@nx-tools/nx-container": "7.2.1",
     "@nx/eslint": "22.7.10",
     "@nx/js": "22.7.10",
-    "@nx/maven": "22.7.10",
+    "@nx/maven": "23.1.2",
     "@nx/playwright": "22.7.10",
     "@nx/react": "22.7.10",
     "@nx/vite": "22.7.10",
