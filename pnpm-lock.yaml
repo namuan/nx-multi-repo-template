@@ -89,8 +89,8 @@ importers:
         specifier: 22.5.3
         version: 22.5.3(@babel/traverse@7.29.7(supports-color@8.1.1))(debug@4.4.3(supports-color@8.1.1))(nx@22.5.3(debug@4.4.3(supports-color@8.1.1))(supports-color@8.1.1))(supports-color@8.1.1)
       '@nx/maven':
-        specifier: 22.5.4
-        version: 22.5.4(nx@22.5.3(debug@4.4.3(supports-color@8.1.1))(supports-color@8.1.1))
+        specifier: 23.1.0
+        version: 23.1.0(nx@22.5.3(debug@4.4.3(supports-color@8.1.1))(supports-color@8.1.1))
       '@nx/playwright':
         specifier: 22.5.3
         version: 22.5.3(@babel/traverse@7.29.7(supports-color@8.1.1))(@playwright/test@1.58.2)(@zkochan/js-yaml@0.0.7)(debug@4.4.3(supports-color@8.1.1))(eslint@9.39.3(jiti@2.4.2)(supports-color@8.1.1))(nx@22.5.3(debug@4.4.3(supports-color@8.1.1))(supports-color@8.1.1))(supports-color@8.1.1)
@@ -1403,6 +1403,11 @@ packages:
     peerDependencies:
       nx: '>= 21 <= 23 || ^22.0.0-0'
 
+  '@nx/devkit@23.1.0':
+    resolution: {integrity: sha512-4LPBrjwtretBQksqph2aXqz2Atd5+oO7RTVlQoOweU8Sh2A0wM8CNig8n+LX2iwxniPYRooLN4kRtKxO4mi2Mw==}
+    peerDependencies:
+      nx: '>= 22 <= 24 || ^23.0.0-0'
+
   '@nx/eslint@22.5.3':
     resolution: {integrity: sha512-XJKpwnSJRCat+81sUDdJWWvKz3vKo/3X9oHMGDzTYx3mexCgKgpmHBuRVgnZ9n2IVDx8S5ye4ICc9qiY6oHWIA==}
     peerDependencies:
@@ -1428,8 +1433,8 @@ packages:
       verdaccio:
         optional: true
 
-  '@nx/maven@22.5.4':
-    resolution: {integrity: sha512-Pt+19IEvQzBfOPK04H7WogJgsz2irbkFN0gg+NgdfxDG17vFMftd31IBZCUkNlHsYSg+8upiaBpHlwnrAA1jtA==}
+  '@nx/maven@23.1.0':
+    resolution: {integrity: sha512-30QnNFInTV90uTSkePgP1gN0AuAmdQ8eUKic72Z7Z084p6VTBvGiY0IwfJsR4OBI1nT+9yciDkd+haNoCeTDYQ==}
 
   '@nx/module-federation@22.5.3':
     resolution: {integrity: sha512-dKRkT/ULV+nXr7O25YMDwQu/4nxl27AcHJfOmVBVKquXrtrBu/d6dbypfFDMyr5pXqR5gb2euEw0mGVMyHLTiA==}
@@ -2512,6 +2517,10 @@ packages:
     resolution: {integrity: sha512-JZyDyq3D4AUifKTPOB7DELf6XsB3WdPuNxCtob1vFXPsSXhdAiHBWJ/tJ8HAc9aH84BK+5JFZLNkJKx3G9kzQg==}
     engines: {node: 20 || >=22}
 
+  brace-expansion@5.0.9:
+    resolution: {integrity: sha512-ScQ4IuvIEF1TMlP7Zt+vjJ//9zlPb2SDcxWxM3bk8s6t6GGdJ7KO1dCcTidOPJKePW30LE/2cT7wCyPho9/Wxg==}
+    engines: {node: 20 || >=22}
+
   braces@3.0.3:
     resolution: {integrity: sha512-yQbXgO/OSZVD2IsiLlro+7Hf6Q18EJrKSEsdoMzKePKXct3gvD8oLcOQdIzGupr5Fj+EDe8gO/lxc1BzfMpxvA==}
     engines: {node: '>=8'}
@@ -2675,6 +2684,7 @@ packages:
   cron-parser@4.9.0:
     resolution: {integrity: sha512-p0SaNjrHOnQeR8/VnfGbmg9te2kfyYSQ7Sc/j/6DtPL3JQvKxmjO9TSjNFpujqV3vEYYBvNNvXSxzyksBWAx1Q==}
     engines: {node: '>=12.0.0'}
+    deprecated: v4 is no longer maintained, upgrade to v5
 
   cross-spawn@7.0.6:
     resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==}
@@ -2881,6 +2891,11 @@ packages:
   ejs@3.1.10:
     resolution: {integrity: sha512-UeJmFfOrAQS8OJWPZ4qtgHyWExa088/MtK5UEyoJGFH67cDEXkZSviOiKRCZ4Xij0zxI3JECgYs3oKx+AizQBA==}
     engines: {node: '>=0.10.0'}
+    hasBin: true
+
+  ejs@5.0.1:
+    resolution: {integrity: sha512-COqBPFMxuPTPspXl2DkVYaDS3HtrD1GpzOGkNTJ1IYkifq/r9h8SVEFrjA3D9/VJGOEoMQcrlhpntcSUrM8k6A==}
+    engines: {node: '>=0.12.18'}
     hasBin: true
 
   electron-to-chromium@1.5.302:
@@ -3745,6 +3760,10 @@ packages:
     resolution: {integrity: sha512-oRjTw/97aTBN0RHbYCdtF1MQfvusSIBQM0IZEgzl6426+8jSC0nF1a/GmnVLpfB9yyr6g6FTqWqiZVbxrtaCIg==}
     engines: {node: 18 || 20 || >=22}
 
+  minimatch@10.2.5:
+    resolution: {integrity: sha512-MULkVLfKGYDFYejP07QOurDLLQpcjk7Fw+7jXS2R2czRQzR56yHRveU5NDJEOviH+hETZKSkIk5c+T23GjFUMg==}
+    engines: {node: 18 || 20 || >=22}
+
   minimatch@3.1.5:
     resolution: {integrity: sha512-VgjWUsnnT6n+NUk6eZq77zeFdpW2LWDzP6zFGrCbHXiYNul5Dzqk2HHQ5uFH2DNW5Xbp8+jVzaeNt94ssEEl4w==}
 
@@ -4229,6 +4248,11 @@ packages:
 
   semver@7.7.4:
     resolution: {integrity: sha512-vFKC2IEtQnVhpT78h1Yp8wzwrf8CM+MzKMHGJZfBtzhZNycRFnXsHk6E5TxIkkMsgNS7mdX3AGB7x2QM2di4lA==}
+    engines: {node: '>=10'}
+    hasBin: true
+
+  semver@7.8.5:
+    resolution: {integrity: sha512-Y7/KDsb8LjooZpwaqGyulO6DQlksgCncchHGk+sZIY4SBvUocMBEFH5Ur1fI4dV+Jvl0w6cjvucaIi40puRioA==}
     engines: {node: '>=10'}
     hasBin: true
 
@@ -6310,7 +6334,7 @@ snapshots:
       enquirer: 2.3.6
       minimatch: 10.2.4
       nx: 22.5.3(debug@4.4.3(supports-color@8.1.1))(supports-color@8.1.1)
-      semver: 7.7.4
+      semver: 7.8.5
       tslib: 2.8.1
       yargs-parser: 21.1.1
 
@@ -6321,8 +6345,20 @@ snapshots:
       enquirer: 2.3.6
       minimatch: 10.2.4
       nx: 22.5.4(debug@4.4.3(supports-color@8.1.1))(supports-color@8.1.1)
-      semver: 7.7.4
+      semver: 7.8.5
       tslib: 2.8.1
+      yargs-parser: 21.1.1
+
+  '@nx/devkit@23.1.0(nx@22.5.3(debug@4.4.3(supports-color@8.1.1))(supports-color@8.1.1))':
+    dependencies:
+      '@zkochan/js-yaml': 0.0.7
+      ejs: 5.0.1
+      enquirer: 2.3.6
+      minimatch: 10.2.5
+      nx: 22.5.3(debug@4.4.3(supports-color@8.1.1))(supports-color@8.1.1)
+      semver: 7.8.5
+      tslib: 2.8.1
+      yaml: 2.9.0
       yargs-parser: 21.1.1
 
   '@nx/eslint@22.5.3(@babel/traverse@7.29.7(supports-color@8.1.1))(@zkochan/js-yaml@0.0.7)(debug@4.4.3(supports-color@8.1.1))(eslint@9.39.3(jiti@2.4.2)(supports-color@8.1.1))(nx@22.5.3(debug@4.4.3(supports-color@8.1.1))(supports-color@8.1.1))(supports-color@8.1.1)':
@@ -6416,10 +6452,11 @@ snapshots:
       - nx
       - supports-color
 
-  '@nx/maven@22.5.4(nx@22.5.3(debug@4.4.3(supports-color@8.1.1))(supports-color@8.1.1))':
+  '@nx/maven@23.1.0(nx@22.5.3(debug@4.4.3(supports-color@8.1.1))(supports-color@8.1.1))':
     dependencies:
-      '@nx/devkit': 22.5.4(nx@22.5.3(debug@4.4.3(supports-color@8.1.1))(supports-color@8.1.1))
+      '@nx/devkit': 23.1.0(nx@22.5.3(debug@4.4.3(supports-color@8.1.1))(supports-color@8.1.1))
       '@xmldom/xmldom': 0.8.13
+      tree-kill: 1.2.2
       tslib: 2.8.1
     transitivePeerDependencies:
       - nx
@@ -6717,7 +6754,7 @@ snapshots:
       enquirer: 2.3.6
       nx: 22.5.4(debug@4.4.3(supports-color@8.1.1))(supports-color@8.1.1)
       picomatch: 4.0.5
-      semver: 7.7.4
+      semver: 7.8.5
       tslib: 2.8.1
       yargs-parser: 21.1.1
     transitivePeerDependencies:
@@ -7676,6 +7713,10 @@ snapshots:
     dependencies:
       balanced-match: 4.0.4
 
+  brace-expansion@5.0.9:
+    dependencies:
+      balanced-match: 4.0.4
+
   braces@3.0.3:
     dependencies:
       fill-range: 7.1.1
@@ -8008,6 +8049,8 @@ snapshots:
   ejs@3.1.10:
     dependencies:
       jake: 10.9.4
+
+  ejs@5.0.1: {}
 
   electron-to-chromium@1.5.302: {}
 
@@ -8882,7 +8925,7 @@ snapshots:
 
   make-dir@4.0.0:
     dependencies:
-      semver: 7.7.4
+      semver: 7.8.5
 
   math-intrinsics@1.1.0: {}
 
@@ -8927,7 +8970,11 @@ snapshots:
 
   minimatch@10.2.4:
     dependencies:
-      brace-expansion: 5.0.8
+      brace-expansion: 5.0.9
+
+  minimatch@10.2.5:
+    dependencies:
+      brace-expansion: 5.0.9
 
   minimatch@3.1.5:
     dependencies:
@@ -8935,7 +8982,7 @@ snapshots:
 
   minimatch@5.1.9:
     dependencies:
-      brace-expansion: 5.0.8
+      brace-expansion: 5.0.9
 
   minimist@1.2.8: {}
 
@@ -9067,7 +9114,7 @@ snapshots:
       ora: 5.3.0
       picocolors: 1.1.1
       resolve.exports: 2.0.3
-      semver: 7.7.4
+      semver: 7.8.5
       string-width: 4.2.3
       tar-stream: 2.2.0
       tmp: 0.2.7
@@ -9499,6 +9546,8 @@ snapshots:
   semver@7.6.3: {}
 
   semver@7.7.4: {}
+
+  semver@7.8.5: {}
 
   send@0.19.2(supports-color@8.1.1):
     dependencies:
