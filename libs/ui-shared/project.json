@@ -18,7 +18,7 @@
       "executor": "@nx/vitest:test",
       "outputs": ["{options.reportsDirectory}"],
       "options": {
-        "reportsDirectory": "../../coverage/libs/ui-shared"
+        "reportsDirectory": "coverage/libs/ui-shared"
       }
     },
     "lint": {
