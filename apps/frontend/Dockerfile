@@ -11,7 +11,7 @@ COPY apps/frontend/package.json ./apps/frontend/
 COPY libs/ui-shared/package.json ./libs/ui-shared/
 
 # Install dependencies
-RUN pnpm install --frozen-lockfile
+RUN apk add --no-cache git && git init && pnpm install --frozen-lockfile && rm -rf .git
 
 # Copy source files
 COPY tsconfig.base.json nx.json ./
