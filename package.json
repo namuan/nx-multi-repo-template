@@ -54,7 +54,7 @@
     "dev:tmux": "npm run check -- --tmux && tools/tmux/fleet-dev.sh"
   },
   "devDependencies": {
-    "@nx-tools/nx-container": "7.2.1",
+    "@nx-tools/nx-container": "7.3.0",
     "@nx/eslint": "22.7.10",
     "@nx/js": "22.7.10",
     "@nx/maven": "23.1.2",
